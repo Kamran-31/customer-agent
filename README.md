@@ -13,22 +13,6 @@ Zyvra is a modern, single-agent customer-support application built with **CrewAI
 - Displays escalated cases in a **Pending Human Support** queue in the sidebar.
 - Keeps API credentials in Streamlit Secrets.
 
-## Project files
-
-```text
-.
-├── app.py
-├── requirements.txt
-├── .python-version
-├── chunks.json
-├── faiss.index                  # generated automatically on first app startup if absent
-├── build_embeddings.py
-├── Zyvra_orders_database.xlsx
-├── Zyvra_Customer_Support_Handbook.md
-├── knowledge/
-│   └── Zyvra_Customer_Support_Handbook.md
-└── secrets.example.toml
-```
 
 ## Embeddings
 
