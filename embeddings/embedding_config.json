@@ -1,0 +1,10 @@
+{
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "dimension": 384,
+  "normalization": "L2",
+  "faiss_index_type": "IndexFlatIP",
+  "similarity": "cosine_similarity_after_L2_normalization",
+  "chunk_count": 19,
+  "index_filename": "faiss.index",
+  "generated_by": "build_embeddings.py"
+}

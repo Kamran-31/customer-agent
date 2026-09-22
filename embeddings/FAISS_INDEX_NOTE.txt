@@ -1,0 +1,1 @@
+faiss.index is generated automatically by app.py on first Streamlit startup using all-MiniLM-L6-v2 (384 dimensions). A precomputed binary index was not fabricated; the runtime build creates the genuine FAISS index.
