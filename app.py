@@ -60,20 +60,17 @@ if not GEMINI_API_KEY:
     st.stop()
 
 
-# ============================================================
-# CUSTOM CSS
-# ============================================================
-
 st.markdown(
     """
     <style>
 
-    /* --------------------------------------------------------
+    /* ========================================================
        GLOBAL
-    -------------------------------------------------------- */
+    ======================================================== */
 
     .stApp {
         background: #f4f7fb;
+        color: #111827;
     }
 
     .main .block-container {
@@ -82,7 +79,6 @@ st.markdown(
         padding-bottom: 3rem;
     }
 
-    /* Hide Streamlit default decoration */
     #MainMenu {
         visibility: hidden;
     }
@@ -96,9 +92,26 @@ st.markdown(
     }
 
 
-    /* --------------------------------------------------------
+    /* ========================================================
+       GLOBAL TEXT
+    ======================================================== */
+
+    .stMarkdown,
+    .stMarkdown p,
+    .stMarkdown span,
+    .stMarkdown div,
+    label {
+        color: #111827;
+    }
+
+    p {
+        color: #334155;
+    }
+
+
+    /* ========================================================
        SIDEBAR
-    -------------------------------------------------------- */
+    ======================================================== */
 
     section[data-testid="stSidebar"] {
         background: #111827;
@@ -109,28 +122,33 @@ st.markdown(
         color: #e5e7eb;
     }
 
+    section[data-testid="stSidebar"] .stMarkdown p {
+        color: #cbd5e1;
+    }
+
     section[data-testid="stSidebar"] .stButton button {
         background: #1f2937;
         border: 1px solid #374151;
-        color: #f9fafb;
+        color: #f9fafb !important;
         border-radius: 10px;
     }
 
     section[data-testid="stSidebar"] .stButton button:hover {
-        border-color: #6366f1;
+        border-color: #818cf8;
         background: #273449;
+        color: white !important;
     }
 
 
-    /* --------------------------------------------------------
+    /* ========================================================
        HEADER
-    -------------------------------------------------------- */
+    ======================================================== */
 
     .zyvra-header {
         background: linear-gradient(
             135deg,
             #172554 0%,
-            #312e81 48%,
+            #312e81 50%,
             #4c1d95 100%
         );
 
@@ -145,7 +163,7 @@ st.markdown(
     }
 
     .zyvra-header-title {
-        color: white;
+        color: #ffffff !important;
         font-size: 31px;
         font-weight: 800;
         letter-spacing: -0.8px;
@@ -153,7 +171,7 @@ st.markdown(
     }
 
     .zyvra-header-subtitle {
-        color: #c7d2fe;
+        color: #c7d2fe !important;
         font-size: 14px;
         margin-top: 6px;
     }
@@ -161,7 +179,7 @@ st.markdown(
     .zyvra-status {
         display: inline-block;
         background: rgba(34, 197, 94, 0.14);
-        color: #bbf7d0;
+        color: #bbf7d0 !important;
         border: 1px solid rgba(134, 239, 172, 0.2);
         padding: 6px 11px;
         border-radius: 999px;
@@ -171,43 +189,37 @@ st.markdown(
     }
 
 
-    /* --------------------------------------------------------
+    /* ========================================================
        WELCOME
-    -------------------------------------------------------- */
+    ======================================================== */
 
     .welcome-title {
         font-size: 30px;
         font-weight: 800;
-        color: #111827;
+        color: #0f172a !important;
         margin-bottom: 4px;
     }
 
     .welcome-subtitle {
-        color: #64748b;
+        color: #64748b !important;
         font-size: 15px;
         margin-bottom: 22px;
     }
 
 
-    /* --------------------------------------------------------
-       FEATURE CARDS
-    -------------------------------------------------------- */
+    /* ========================================================
+       WHITE FEATURE CARDS
+    ======================================================== */
 
     .feature-card {
-        background: white;
-        border: 1px solid #e2e8f0;
+        background: #ffffff !important;
+        border: 1px solid #dbe3ee;
         border-radius: 16px;
         padding: 18px;
         min-height: 125px;
 
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-
-        transition: 0.2s ease;
-    }
-
-    .feature-card:hover {
-        border-color: #a5b4fc;
-        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.08);
+        box-shadow:
+            0 4px 14px rgba(15, 23, 42, 0.05);
     }
 
     .feature-icon {
@@ -216,89 +228,140 @@ st.markdown(
     }
 
     .feature-title {
-        color: #1e293b;
+        color: #111827 !important;
         font-weight: 700;
         font-size: 15px;
     }
 
     .feature-text {
-        color: #64748b;
+        color: #475569 !important;
         font-size: 12px;
         line-height: 1.5;
         margin-top: 4px;
     }
 
 
-    /* --------------------------------------------------------
-       CHAT
-    -------------------------------------------------------- */
-
-    [data-testid="stChatMessage"] {
-        border-radius: 16px;
-    }
-
-    [data-testid="stChatMessageContent"] {
-        font-size: 14px;
-        line-height: 1.65;
-    }
-
-
-    /* --------------------------------------------------------
-       BUTTONS
-    -------------------------------------------------------- */
-
-    .stButton button {
-        border-radius: 10px;
-        font-weight: 600;
-        border: 1px solid #dbe2ea;
-        min-height: 42px;
-    }
-
-    .stButton button:hover {
-        border-color: #6366f1;
-        color: #4338ca;
-    }
-
-
-    /* --------------------------------------------------------
-       INPUT
-    -------------------------------------------------------- */
-
-    [data-testid="stChatInput"] {
-        border-radius: 16px;
-    }
-
-
-    /* --------------------------------------------------------
-       INFO / STATUS CARDS
-    -------------------------------------------------------- */
+    /* ========================================================
+       STATUS CARDS
+    ======================================================== */
 
     .status-card {
-        background: white;
-        border: 1px solid #e2e8f0;
+        background: #ffffff !important;
+        border: 1px solid #dbe3ee;
         border-radius: 14px;
         padding: 15px;
         margin-bottom: 10px;
+
+        box-shadow:
+            0 3px 10px rgba(15, 23, 42, 0.04);
     }
 
     .status-label {
-        color: #64748b;
+        color: #64748b !important;
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
     .status-value {
-        color: #0f172a;
+        color: #0f172a !important;
         font-weight: 700;
         font-size: 15px;
         margin-top: 3px;
     }
 
 
-    /* --------------------------------------------------------
+    /* ========================================================
+       STREAMLIT BUTTONS
+    ======================================================== */
+
+    .stButton > button {
+        background: #ffffff !important;
+        color: #1e293b !important;
+
+        border: 1px solid #dbe3ee !important;
+        border-radius: 10px;
+
+        font-weight: 600;
+        min-height: 42px;
+    }
+
+    .stButton > button p {
+        color: #1e293b !important;
+    }
+
+    .stButton > button:hover {
+        background: #f8fafc !important;
+        border-color: #6366f1 !important;
+        color: #4338ca !important;
+    }
+
+    .stButton > button:hover p {
+        color: #4338ca !important;
+    }
+
+
+    /* ========================================================
+       CHAT INPUT
+    ======================================================== */
+
+    [data-testid="stChatInput"] {
+        background: #ffffff !important;
+        border-radius: 16px;
+    }
+
+    [data-testid="stChatInput"] textarea {
+        color: #111827 !important;
+        background: #ffffff !important;
+    }
+
+    [data-testid="stChatInput"] textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+
+    /* ========================================================
+       CHAT MESSAGES
+    ======================================================== */
+
+    [data-testid="stChatMessageContent"] {
+        color: #1e293b !important;
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    [data-testid="stChatMessageContent"] p {
+        color: #1e293b !important;
+    }
+
+
+    /* ========================================================
+       INPUTS / SELECTBOX / TEXT AREAS
+    ======================================================== */
+
+    input,
+    textarea {
+        color: #111827 !important;
+        background-color: #ffffff !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    [data-baseweb="select"] {
+        background-color: #ffffff !important;
+    }
+
+    [data-baseweb="select"] * {
+        color: #111827 !important;
+    }
+
+
+    /* ========================================================
        DIVIDER
-    -------------------------------------------------------- */
+    ======================================================== */
 
     .soft-divider {
         height: 1px;
@@ -307,13 +370,26 @@ st.markdown(
     }
 
 
-    /* --------------------------------------------------------
+    /* ========================================================
+       INFO MESSAGE
+    ======================================================== */
+
+    [data-testid="stAlert"] {
+        color: #1e293b !important;
+    }
+
+    [data-testid="stAlert"] p {
+        color: #1e293b !important;
+    }
+
+
+    /* ========================================================
        FOOTER
-    -------------------------------------------------------- */
+    ======================================================== */
 
     .zyvra-footer {
         text-align: center;
-        color: #94a3b8;
+        color: #94a3b8 !important;
         font-size: 11px;
         margin-top: 35px;
         padding-top: 15px;
@@ -321,7 +397,7 @@ st.markdown(
 
     </style>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 
