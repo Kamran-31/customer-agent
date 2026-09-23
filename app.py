@@ -19,33 +19,26 @@ from pydantic import BaseModel, Field
 
 APP_NAME = "Zyvra"
 
-# Embedding model
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 EMBEDDING_DIMENSION = 384
 
-# Gemini model
 GEMINI_MODEL = "gemini/gemini-3.5-flash-lite"
 
-# Project directories
 BASE_DIR = Path(__file__).resolve().parent
 
 DATA_DIR = BASE_DIR / "data"
 EMBEDDINGS_DIR = BASE_DIR / "embeddings"
 
-# Knowledge base
 HANDBOOK_PATH = DATA_DIR / "Zyvra_Customer_Support_Handbook.md"
-
-# Order database
 ORDERS_PATH = DATA_DIR / "Zyvra_orders_database.xlsx"
 
-# Embedding files
 CHUNKS_PATH = EMBEDDINGS_DIR / "chunks.json"
 INDEX_PATH = EMBEDDINGS_DIR / "faiss.index"
 EMBEDDING_CONFIG_PATH = EMBEDDINGS_DIR / "embedding_config.json"
 
 
 # ============================================================
-# STREAMLIT PAGE CONFIG
+# PAGE CONFIG
 # ============================================================
 
 st.set_page_config(
@@ -57,7 +50,7 @@ st.set_page_config(
 
 
 # ============================================================
-# CUSTOM UI
+# STREAMLIT NATIVE STYLING
 # ============================================================
 
 st.markdown(
@@ -65,79 +58,96 @@ st.markdown(
     <style>
 
     .stApp {
-        background:
-            radial-gradient(
-                circle at 15% 0%,
-                rgba(99,102,241,.10),
-                transparent 28%
-            ),
-            radial-gradient(
-                circle at 90% 10%,
-                rgba(14,165,233,.10),
-                transparent 25%
-            ),
-            #f8fafc;
+        background-color: #f8fafc;
     }
 
     .block-container {
-        max-width: 1180px;
+        max-width: 1150px;
         padding-top: 2rem;
         padding-bottom: 3rem;
     }
 
-    .hero {
-        border: 1px solid rgba(148,163,184,.22);
-        background: rgba(255,255,255,.85);
-        backdrop-filter: blur(16px);
-        border-radius: 24px;
-        padding: 28px 30px;
-        margin-bottom: 20px;
-        box-shadow: 0 16px 50px rgba(15,23,42,.07);
+    .zyvra-header {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 22px;
+        padding: 26px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
     }
 
-    .brand {
-        font-size: 2.2rem;
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        margin: 0;
-    }
-
-    .tagline {
-        color: #64748b;
-        margin-top: 4px;
-        font-size: 1rem;
-    }
-
-    .status-pill {
+    .online-status {
         display: inline-block;
-        padding: 5px 11px;
-        border-radius: 999px;
         background: #ecfdf5;
         color: #047857;
-        font-size: .78rem;
+        border-radius: 999px;
+        padding: 5px 11px;
+        font-size: 13px;
         font-weight: 700;
         margin-bottom: 8px;
     }
 
-    .pending-card {
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        border-radius: 14px;
-        padding: 12px;
-        margin: 8px 0;
+    .zyvra-logo {
+        font-size: 38px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
     }
 
-    .small-muted {
+    .zyvra-tagline {
         color: #64748b;
-        font-size: .82rem;
+        font-size: 16px;
+        margin-top: 6px;
+    }
+
+    .welcome-box {
+        text-align: center;
+        padding: 45px 20px 30px;
+    }
+
+    .welcome-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .welcome-text {
+        color: #64748b;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .pending-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 9px;
+    }
+
+    .case-id {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .case-meta {
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .case-summary {
+        font-size: 13px;
+        color: #334155;
+        margin-top: 6px;
     }
 
     div[data-testid="stChatMessage"] {
-        border-radius: 18px;
+        border-radius: 16px;
     }
 
-    .stButton button {
-        border-radius: 12px;
+    .stButton > button {
+        border-radius: 10px;
     }
 
     </style>
@@ -147,7 +157,7 @@ st.markdown(
 
 
 # ============================================================
-# SESSION MEMORY
+# SESSION STATE
 # ============================================================
 
 if "messages" not in st.session_state:
@@ -161,76 +171,78 @@ if "case_counter" not in st.session_state:
 
 
 # ============================================================
-# AUTOMATIC FAISS INDEX CREATION
+# KNOWLEDGE BASE + FAISS
 # ============================================================
 
-@st.cache_resource(show_spinner="Loading Zyvra AI knowledge base...")
+@st.cache_resource(show_spinner="Preparing Zyvra's knowledge base...")
 def load_knowledge_store():
 
-    # Make sure embeddings directory exists
-    EMBEDDINGS_DIR.mkdir(parents=True, exist_ok=True)
-
-    # --------------------------------------------------------
-    # Load chunks
-    # --------------------------------------------------------
+    EMBEDDINGS_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
     if not CHUNKS_PATH.exists():
         raise FileNotFoundError(
-            f"Knowledge chunks file not found:\n{CHUNKS_PATH}"
+            f"chunks.json was not found at:\n{CHUNKS_PATH}"
         )
 
-    with open(CHUNKS_PATH, "r", encoding="utf-8") as file:
+    with open(
+        CHUNKS_PATH,
+        "r",
+        encoding="utf-8"
+    ) as file:
         chunks = json.load(file)
 
     if not chunks:
-        raise RuntimeError("chunks.json is empty.")
+        raise RuntimeError(
+            "chunks.json is empty."
+        )
 
-    # --------------------------------------------------------
-    # Load embedding model
-    # --------------------------------------------------------
+    model = SentenceTransformer(
+        EMBEDDING_MODEL
+    )
 
-    model = SentenceTransformer(EMBEDDING_MODEL)
+    dimension = model.get_sentence_embedding_dimension()
 
-    actual_dimension = model.get_sentence_embedding_dimension()
-
-    if actual_dimension != EMBEDDING_DIMENSION:
+    if dimension != EMBEDDING_DIMENSION:
         raise RuntimeError(
             f"Embedding dimension mismatch. "
             f"Expected {EMBEDDING_DIMENSION}, "
-            f"received {actual_dimension}."
+            f"got {dimension}."
         )
 
-    # --------------------------------------------------------
-    # Try loading existing FAISS index
-    # --------------------------------------------------------
-
     index = None
+
+    # --------------------------------------------------------
+    # Load existing index
+    # --------------------------------------------------------
 
     if INDEX_PATH.exists():
 
         try:
 
-            existing_index = faiss.read_index(str(INDEX_PATH))
+            existing_index = faiss.read_index(
+                str(INDEX_PATH)
+            )
 
             if (
-                existing_index.d == EMBEDDING_DIMENSION
-                and existing_index.ntotal == len(chunks)
+                existing_index.d
+                == EMBEDDING_DIMENSION
+                and existing_index.ntotal
+                == len(chunks)
             ):
+
                 index = existing_index
 
         except Exception:
             index = None
 
     # --------------------------------------------------------
-    # BUILD INDEX AUTOMATICALLY IF MISSING / INVALID
+    # Automatically create FAISS index
     # --------------------------------------------------------
 
     if index is None:
-
-        st.info(
-            "Zyvra is preparing its knowledge-search index. "
-            "This happens automatically on the first deployment."
-        )
 
         texts = [
             item.get("text", "")
@@ -239,10 +251,9 @@ def load_knowledge_store():
 
         if not any(texts):
             raise RuntimeError(
-                "No text was found inside chunks.json."
+                "No text was found in chunks.json."
             )
 
-        # Generate 384-dimensional embeddings
         embeddings = model.encode(
             texts,
             batch_size=32,
@@ -251,47 +262,39 @@ def load_knowledge_store():
             normalize_embeddings=True,
         ).astype("float32")
 
-        # FAISS Inner Product + normalized vectors
-        # = cosine similarity
-        new_index = faiss.IndexFlatIP(
+        index = faiss.IndexFlatIP(
             EMBEDDING_DIMENSION
         )
 
-        new_index.add(embeddings)
+        index.add(
+            embeddings
+        )
 
-        # Write actual binary FAISS index
         faiss.write_index(
-            new_index,
+            index,
             str(INDEX_PATH)
         )
 
-        index = new_index
+        config = {
+            "embedding_model": EMBEDDING_MODEL,
+            "dimension": EMBEDDING_DIMENSION,
+            "index_type": "IndexFlatIP",
+            "similarity": "cosine_similarity",
+            "normalized_embeddings": True,
+            "total_vectors": int(index.ntotal),
+        }
 
-    # --------------------------------------------------------
-    # Save/update embedding configuration
-    # --------------------------------------------------------
+        with open(
+            EMBEDDING_CONFIG_PATH,
+            "w",
+            encoding="utf-8"
+        ) as file:
 
-    config = {
-        "embedding_model": EMBEDDING_MODEL,
-        "dimension": EMBEDDING_DIMENSION,
-        "index_type": "IndexFlatIP",
-        "similarity": "cosine_similarity",
-        "normalized_embeddings": True,
-        "total_vectors": int(index.ntotal),
-        "created_or_loaded_at": datetime.now().isoformat(),
-    }
-
-    with open(
-        EMBEDDING_CONFIG_PATH,
-        "w",
-        encoding="utf-8"
-    ) as file:
-
-        json.dump(
-            config,
-            file,
-            indent=4
-        )
+            json.dump(
+                config,
+                file,
+                indent=4
+            )
 
     return model, index, chunks
 
@@ -305,7 +308,7 @@ def load_orders():
 
     if not ORDERS_PATH.exists():
         raise FileNotFoundError(
-            f"Order database not found:\n{ORDERS_PATH}"
+            f"Order database was not found at:\n{ORDERS_PATH}"
         )
 
     df = pd.read_excel(
@@ -324,7 +327,7 @@ def load_orders():
 def search_knowledge(
     query: str,
     top_k: int = 4
-) -> list[dict]:
+):
 
     model, index, chunks = load_knowledge_store()
 
@@ -374,7 +377,7 @@ def search_knowledge(
 
 def lookup_order(
     order_id: str
-) -> dict | None:
+):
 
     order_id = (
         order_id
@@ -397,7 +400,7 @@ def lookup_order(
 
 
 # ============================================================
-# CREWAI KNOWLEDGE TOOL
+# KNOWLEDGE SEARCH TOOL
 # ============================================================
 
 class KnowledgeSearchInput(BaseModel):
@@ -407,7 +410,7 @@ class KnowledgeSearchInput(BaseModel):
         description=(
             "Customer question or support topic "
             "to search in the Zyvra knowledge base."
-        ),
+        )
     )
 
 
@@ -416,10 +419,9 @@ class KnowledgeSearchTool(BaseTool):
     name: str = "search_zyvra_knowledge"
 
     description: str = (
-        "Search the Zyvra customer-support knowledge base "
-        "using semantic similarity. Use this for company "
-        "policies, shipping, returns, warranty, payments, "
-        "privacy, products, troubleshooting, and support procedures."
+        "Search the Zyvra company knowledge base. "
+        "Use for policies, shipping, returns, warranty, "
+        "payments, products, troubleshooting and support."
     )
 
     args_schema: type[BaseModel] = KnowledgeSearchInput
@@ -435,41 +437,34 @@ class KnowledgeSearchTool(BaseTool):
         )
 
         if not results:
-            return (
-                "No relevant Zyvra knowledge-base information "
-                "was found."
-            )
+            return "No relevant knowledge was found."
 
-        formatted = []
+        output = []
 
         for result in results:
 
-            formatted.append(
+            output.append(
                 f"""
-CHUNK ID: {result.get('chunk_id', 'N/A')}
-SECTION: {result.get('section', 'N/A')}
-SIMILARITY: {result.get('similarity', 'N/A')}
+CHUNK ID: {result.get("chunk_id", "N/A")}
+SIMILARITY: {result.get("similarity", "N/A")}
 
 CONTENT:
-{result.get('text', '')}
+{result.get("text", "")}
 """
             )
 
-        return "\n".join(formatted)
+        return "\n".join(output)
 
 
 # ============================================================
-# CREWAI ORDER TOOL
+# ORDER LOOKUP TOOL
 # ============================================================
 
 class OrderLookupInput(BaseModel):
 
     order_id: str = Field(
         ...,
-        description=(
-            "Zyvra order ID such as "
-            "ORD-2026-1001."
-        ),
+        description="Zyvra order ID such as ORD-2026-1001."
     )
 
 
@@ -478,9 +473,8 @@ class OrderLookupTool(BaseTool):
     name: str = "lookup_order_database"
 
     description: str = (
-        "Look up one Zyvra order from the simulated Excel "
-        "order database. Use this when the customer provides "
-        "an Order ID."
+        "Look up an order from Zyvra's simulated Excel "
+        "order database."
     )
 
     args_schema: type[BaseModel] = OrderLookupInput
@@ -495,7 +489,6 @@ class OrderLookupTool(BaseTool):
         )
 
         if order is None:
-
             return (
                 f"No order was found for "
                 f"{order_id.strip().upper()}."
@@ -508,17 +501,16 @@ class OrderLookupTool(BaseTool):
 
 
 # ============================================================
-# CREWAI SINGLE AGENT
+# SINGLE CREWAI AGENT
 # ============================================================
 
-def build_agent() -> Agent:
+def build_agent():
 
     if "GEMINI_API_KEY" not in st.secrets:
 
         raise RuntimeError(
-            "GEMINI_API_KEY is missing. "
-            "Add it under Streamlit Cloud → "
-            "Settings → Secrets."
+            "GEMINI_API_KEY is missing from "
+            "Streamlit Secrets."
         )
 
     llm = LLM(
@@ -532,16 +524,16 @@ def build_agent() -> Agent:
 
         goal=(
             "Resolve customer support questions accurately "
-            "using the Zyvra knowledge base and order database. "
-            "Never invent information. Escalate issues that "
-            "require human intervention."
+            "using Zyvra's knowledge base and order database. "
+            "Never invent information and escalate when "
+            "human intervention is required."
         ),
 
         backstory=(
             "You are Zyvra's first-line AI customer support "
-            "specialist. You are friendly, concise, accurate, "
-            "and careful with customer information. "
-            "You use tools instead of guessing."
+            "specialist. You are friendly, professional, "
+            "accurate and concise. You always use the available "
+            "tools instead of guessing."
         ),
 
         llm=llm,
@@ -558,10 +550,10 @@ def build_agent() -> Agent:
 
 
 # ============================================================
-# CONVERSATION MEMORY
+# CONVERSATION CONTEXT
 # ============================================================
 
-def get_conversation_context() -> str:
+def get_conversation_context():
 
     recent_messages = (
         st.session_state.messages[-12:]
@@ -591,9 +583,9 @@ def get_conversation_context() -> str:
 # HUMAN REQUEST DETECTION
 # ============================================================
 
-def user_explicitly_requests_human(
+def user_requests_human(
     text: str
-) -> bool:
+):
 
     patterns = [
 
@@ -601,7 +593,6 @@ def user_explicitly_requests_human(
         r"\breal person\b",
         r"\bhuman agent\b",
         r"\blive agent\b",
-        r"\bcustomer service agent\b",
         r"\brepresentative\b",
         r"\bspeak to someone\b",
         r"\btalk to someone\b",
@@ -612,24 +603,24 @@ def user_explicitly_requests_human(
 
     ]
 
-    lowered = text.lower()
+    text = text.lower()
 
     return any(
         re.search(
             pattern,
-            lowered
+            text
         )
         for pattern in patterns
     )
 
 
 # ============================================================
-# PARSE AGENT JSON
+# PARSE AGENT RESPONSE
 # ============================================================
 
 def parse_agent_json(
     raw: str
-) -> dict:
+):
 
     raw = raw.strip()
 
@@ -648,10 +639,10 @@ def parse_agent_json(
 
     try:
 
-        data = json.loads(raw)
+        result = json.loads(raw)
 
-        if isinstance(data, dict):
-            return data
+        if isinstance(result, dict):
+            return result
 
     except json.JSONDecodeError:
         pass
@@ -666,12 +657,12 @@ def parse_agent_json(
 
         try:
 
-            data = json.loads(
+            result = json.loads(
                 match.group(0)
             )
 
-            if isinstance(data, dict):
-                return data
+            if isinstance(result, dict):
+                return result
 
         except json.JSONDecodeError:
             pass
@@ -684,96 +675,76 @@ def parse_agent_json(
 
 
 # ============================================================
-# RUN SUPPORT AGENT
+# RUN AGENT
 # ============================================================
 
 def run_support_agent(
     user_message: str
-) -> dict:
+):
 
     agent = build_agent()
 
     task = Task(
 
         description=f"""
-
-You are responding to the latest customer message
-for Zyvra.
+Respond to the latest Zyvra customer message.
 
 LATEST CUSTOMER MESSAGE:
 {user_message}
 
-CONVERSATION CONTEXT:
+PREVIOUS CONVERSATION:
 {get_conversation_context()}
 
-IMPORTANT INSTRUCTIONS:
+RULES:
 
 1. Answer the customer's actual question.
 
-2. Use search_zyvra_knowledge for:
-   - company information
-   - shipping
-   - returns
-   - warranty
-   - payments
-   - products
-   - troubleshooting
-   - policies
-   - support procedures
+2. Use the knowledge-base tool for company information,
+   policies, shipping, returns, warranty, payments,
+   products and troubleshooting.
 
-3. Use lookup_order_database for order-specific questions.
+3. Use the order database tool for order-specific questions.
 
 4. Never invent order information.
 
-5. If the customer asks about an order but has not
-   provided an Order ID, ask for the Order ID.
+5. If an order question does not contain an Order ID,
+   ask the customer for their Order ID.
 
-6. Remember previous messages in the conversation.
+6. Maintain conversation context.
 
-7. If the available information is insufficient
-   to reliably resolve the issue, escalate it.
+7. If the issue cannot be reliably resolved,
+   escalate it to human support.
 
-8. Escalate cases involving:
-   - unresolved complaints
-   - sensitive account/security matters
-   - warranty decisions requiring inspection
-   - return/refund decisions requiring approval
-   - disputes
-   - cases where available information is insufficient
+8. Escalate disputes, unresolved complaints,
+   sensitive account issues, approval-dependent
+   refunds/returns, warranty decisions requiring
+   inspection, or insufficient-information cases.
 
-9. Never ask the customer for:
-   - password
-   - OTP
-   - CVV
-   - full card number
-   - API key
-   - other authentication secrets
+9. Never request passwords, OTPs, CVVs,
+   full card numbers or other authentication secrets.
 
-10. Be friendly, professional and concise.
+10. Keep the response professional and concise.
 
-11. Return JSON ONLY.
-
-Required JSON format:
+Return JSON ONLY:
 
 {{
-    "response": "Customer-facing response",
+    "response": "customer-facing response",
     "escalate": false,
     "escalation_summary": ""
 }}
 
-If escalation is required:
+For escalation:
 
 {{
-    "response": "Customer-facing response",
+    "response": "customer-facing response",
     "escalate": true,
-    "escalation_summary": "Short summary for human support"
+    "escalation_summary": "short summary for human support"
 }}
-
 """,
 
         expected_output=(
-            "Valid JSON containing response, "
-            "escalate and escalation_summary."
+            "Valid JSON with response, escalate "
+            "and escalation_summary."
         ),
 
         agent=agent,
@@ -802,13 +773,13 @@ If escalation is required:
 
 
 # ============================================================
-# HUMAN ESCALATION
+# CREATE HUMAN SUPPORT CASE
 # ============================================================
 
 def create_pending_case(
     user_message: str,
     summary: str
-) -> dict:
+):
 
     st.session_state.case_counter += 1
 
@@ -841,7 +812,8 @@ def create_pending_case(
 
         "summary": (
             summary.strip()
-            or user_message.strip()
+            if summary.strip()
+            else user_message.strip()
         ),
 
         "status": "Pending Human Support",
@@ -867,7 +839,11 @@ with st.sidebar:
         "AI Customer Support"
     )
 
-    st.markdown("### Pending Human Support")
+    st.divider()
+
+    st.markdown(
+        "### Pending Human Support"
+    )
 
     if st.session_state.pending_cases:
 
@@ -877,23 +853,23 @@ with st.sidebar:
                 f"""
                 <div class="pending-card">
 
-                    <b>{case['case_id']}</b>
+                    <div class="case-id">
+                        {case["case_id"]}
+                    </div>
 
-                    <br>
-
-                    <span class="small-muted">
-                        {case['created_at']}
+                    <div class="case-meta">
+                        {case["created_at"]}
                         ·
-                        {case['order_id']}
-                    </span>
+                        {case["order_id"]}
+                    </div>
 
-                    <div style="margin-top:6px;">
-                        {case['summary']}
+                    <div class="case-summary">
+                        {case["summary"]}
                     </div>
 
                 </div>
                 """,
-                unsafe_allow_html=True,
+                unsafe_allow_html=True
             )
 
     else:
@@ -905,7 +881,7 @@ with st.sidebar:
     st.divider()
 
     if st.button(
-        "Start New Chat",
+        "＋ Start New Chat",
         use_container_width=True
     ):
 
@@ -913,94 +889,57 @@ with st.sidebar:
 
         st.rerun()
 
+    st.divider()
+
     st.caption(
         "Zyvra can answer support questions, "
-        "check orders and escalate unresolved issues."
+        "check orders and escalate unresolved "
+        "issues to human support."
     )
 
 
 # ============================================================
-# MAIN HEADER
+# MAIN ZYVRA HEADER
 # ============================================================
 
 st.markdown(
     """
-    <div style="
-        border: 1px solid rgba(148,163,184,0.22);
-        background: rgba(255,255,255,0.90);
-        border-radius: 24px;
-        padding: 28px 30px;
-        margin-bottom: 20px;
-        box-shadow: 0 16px 50px rgba(15,23,42,0.07);
-    ">
+    <div class="zyvra-header">
 
-        <div style="
-            display: inline-block;
-            padding: 5px 11px;
-            border-radius: 999px;
-            background: #ecfdf5;
-            color: #047857;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        ">
+        <div class="online-status">
             ● Online · AI Support
         </div>
 
-        <div style="
-            font-size: 36px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            color: #0f172a;
-            line-height: 1.1;
-        ">
+        <div class="zyvra-logo">
             Zyvra
         </div>
 
-        <div style="
-            color: #64748b;
-            margin-top: 6px;
-            font-size: 16px;
-        ">
+        <div class="zyvra-tagline">
             Fast answers. Clear support.
             Human escalation when needed.
         </div>
 
     </div>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 
 # ============================================================
-# WELCOME MESSAGE
+# WELCOME SCREEN
 # ============================================================
 
 if not st.session_state.messages:
 
     st.markdown(
         """
-        <div style="
-            text-align: center;
-            padding: 45px 10px 30px;
-        ">
+        <div class="welcome-box">
 
-            <div style="
-                font-size: 30px;
-                font-weight: 700;
-                color: #0f172a;
-                margin-bottom: 10px;
-            ">
+            <div class="welcome-title">
                 How can we help?
             </div>
 
-            <div style="
-                color: #64748b;
-                font-size: 16px;
-                line-height: 1.6;
-                max-width: 650px;
-                margin: 0 auto;
-            ">
+            <div class="welcome-text">
                 Ask about an order, shipping, returns,
                 warranty, payments, products or
                 technical support.
@@ -1008,13 +947,63 @@ if not st.session_state.messages:
 
         </div>
         """,
-        unsafe_allow_html=True,
+        unsafe_allow_html=True
     )
 
+    # Native Streamlit suggestion buttons
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        if st.button(
+            "📦 Check my order",
+            use_container_width=True
+        ):
+
+            st.session_state.messages.append(
+                {
+                    "role": "user",
+                    "content": "I want to check my order."
+                }
+            )
+
+            st.rerun()
+
+    with col2:
+
+        if st.button(
+            "🚚 Shipping information",
+            use_container_width=True
+        ):
+
+            st.session_state.messages.append(
+                {
+                    "role": "user",
+                    "content": "What are your shipping policies?"
+                }
+            )
+
+            st.rerun()
+
+    with col3:
+
+        if st.button(
+            "↩️ Returns & warranty",
+            use_container_width=True
+        ):
+
+            st.session_state.messages.append(
+                {
+                    "role": "user",
+                    "content": "What is your return and warranty policy?"
+                }
+            )
+
+            st.rerun()
 
 
 # ============================================================
-# DISPLAY CHAT HISTORY
+# CHAT HISTORY
 # ============================================================
 
 for message in st.session_state.messages:
@@ -1039,7 +1028,6 @@ prompt = st.chat_input(
 
 if prompt:
 
-    # Save user message
     st.session_state.messages.append(
         {
             "role": "user",
@@ -1058,12 +1046,10 @@ if prompt:
         ):
 
             # ------------------------------------------------
-            # Explicit human request
+            # Direct human request
             # ------------------------------------------------
 
-            if user_explicitly_requests_human(
-                prompt
-            ):
+            if user_requests_human(prompt):
 
                 case = create_pending_case(
 
@@ -1076,9 +1062,9 @@ if prompt:
                 answer = (
                     "Your request has been **escalated "
                     "to human support**.\n\n"
-                    f"Your case **{case['case_id']}** "
-                    "has been added to the pending queue "
-                    "for human follow-up."
+                    f"Your case ID is **{case['case_id']}**.\n\n"
+                    "The request has been added to the "
+                    "pending human-support queue."
                 )
 
             else:
@@ -1110,7 +1096,6 @@ if prompt:
                         )
                     ).strip()
 
-                    # Safety net
                     unresolved_phrases = [
 
                         "i don't know",
@@ -1135,14 +1120,9 @@ if prompt:
                         if not summary:
 
                             summary = (
-                                "The AI could not "
-                                "reliably resolve "
-                                "the customer's request."
+                                "The AI could not reliably "
+                                "resolve the customer's request."
                             )
-
-                    # ------------------------------------------------
-                    # HUMAN ESCALATION
-                    # ------------------------------------------------
 
                     if escalate:
 
@@ -1156,19 +1136,19 @@ if prompt:
                         answer = (
                             f"{answer}\n\n"
                             "---\n\n"
-                            f"**Escalated to Human Support**\n\n"
+                            "**Escalated to Human Support**\n\n"
                             f"Case ID: **{case['case_id']}**\n\n"
                             "Your request has been added "
                             "to the pending human-support queue."
                         )
 
-                except Exception:
+                except Exception as error:
 
                     case = create_pending_case(
 
                         prompt,
 
-                        "AI support workflow encountered "
+                        "The AI support workflow encountered "
                         "an internal issue and requires "
                         "human review."
                     )
@@ -1183,7 +1163,6 @@ if prompt:
 
             st.markdown(answer)
 
-    # Save assistant response
     st.session_state.messages.append(
         {
             "role": "assistant",
