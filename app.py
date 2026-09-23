@@ -285,7 +285,7 @@ section[data-testid="stSidebar"] .stButton button:hover {
 }
 
 /* ========================================================
-   BUTTONS
+   BUTTONS (WITH FULL WRAP & RESPONSIVENESS)
 ======================================================== */
 .stButton > button {
     background: #ffffff !important;
@@ -294,12 +294,20 @@ section[data-testid="stSidebar"] .stButton button:hover {
     border-radius: 12px;
     font-weight: 600;
     font-size: 13.5px;
-    min-height: 44px;
+    min-height: 48px;
+    height: auto !important;
+    padding: 8px 12px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .stButton > button p {
     color: #1e293b !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
 }
 
 .stButton > button:hover {
@@ -384,6 +392,33 @@ textarea::placeholder {
     height: 1px;
     background: #e2e8f0;
     margin: 22px 0 16px 0;
+}
+
+/* ========================================================
+   RESPONSIVE MEDIA QUERIES (TABLETS & MOBILE)
+======================================================== */
+@media (max-width: 768px) {
+    .zyvra-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 18px 20px;
+    }
+
+    .zyvra-badge-tag {
+        align-self: flex-start;
+    }
+
+    .feature-card {
+        min-height: auto;
+        margin-bottom: 12px;
+    }
+
+    .stButton > button {
+        font-size: 12.5px;
+        min-height: 44px;
+        padding: 6px 10px !important;
+    }
 }
 </style>""",
     unsafe_allow_html=True,
