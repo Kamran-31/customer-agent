@@ -925,17 +925,43 @@ with st.sidebar:
 
 st.markdown(
     """
-    <div class="hero">
+    <div style="
+        border: 1px solid rgba(148,163,184,0.22);
+        background: rgba(255,255,255,0.90);
+        border-radius: 24px;
+        padding: 28px 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 16px 50px rgba(15,23,42,0.07);
+    ">
 
-        <div class="status-pill">
+        <div style="
+            display: inline-block;
+            padding: 5px 11px;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: #047857;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        ">
             ● Online · AI Support
         </div>
 
-        <h1 class="brand">
+        <div style="
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: #0f172a;
+            line-height: 1.1;
+        ">
             Zyvra
-        </h1>
+        </div>
 
-        <div class="tagline">
+        <div style="
+            color: #64748b;
+            margin-top: 6px;
+            font-size: 16px;
+        ">
             Fast answers. Clear support.
             Human escalation when needed.
         </div>
@@ -955,24 +981,36 @@ if not st.session_state.messages:
     st.markdown(
         """
         <div style="
-            text-align:center;
-            padding:55px 10px 35px;
+            text-align: center;
+            padding: 45px 10px 30px;
         ">
 
-            <h2>
+            <div style="
+                font-size: 30px;
+                font-weight: 700;
+                color: #0f172a;
+                margin-bottom: 10px;
+            ">
                 How can we help?
-            </h2>
+            </div>
 
-            <p style="color:#64748b;">
-                Ask about an order, shipping,
-                returns, warranty, payments,
-                products or technical support.
-            </p>
+            <div style="
+                color: #64748b;
+                font-size: 16px;
+                line-height: 1.6;
+                max-width: 650px;
+                margin: 0 auto;
+            ">
+                Ask about an order, shipping, returns,
+                warranty, payments, products or
+                technical support.
+            </div>
 
         </div>
         """,
         unsafe_allow_html=True,
     )
+
 
 
 # ============================================================
