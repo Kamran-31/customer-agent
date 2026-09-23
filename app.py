@@ -285,7 +285,7 @@ section[data-testid="stSidebar"] .stButton button:hover {
 }
 
 /* ========================================================
-   BUTTONS (WITH FULL WRAP & RESPONSIVENESS)
+   BUTTONS
 ======================================================== */
 .stButton > button {
     background: #ffffff !important;
@@ -395,7 +395,7 @@ textarea::placeholder {
 }
 
 /* ========================================================
-   RESPONSIVE MEDIA QUERIES (TABLETS & MOBILE)
+   RESPONSIVE MEDIA QUERIES
 ======================================================== */
 @media (max-width: 768px) {
     .zyvra-header {
@@ -1355,27 +1355,19 @@ for message in st.session_state.messages:
 
 
 # ============================================================
-# CHAT INPUT
+# PROCESS USER INPUT (CHAT INPUT OR QUICK BUTTON)
 # ============================================================
 
 user_prompt = st.chat_input(
     "Ask Zyvra anything..."
 )
 
-
 if user_prompt:
-    # --------------------------------------------------------
-    # UPDATE DYNAMIC SESSION TITLE
-    # --------------------------------------------------------
     if st.session_state.session_title == "New Conversation":
         clean_text = user_prompt.strip()
         st.session_state.session_title = (
             clean_text[:28] + "…" if len(clean_text) > 28 else clean_text
         )
-
-    # --------------------------------------------------------
-    # SAVE USER MESSAGE
-    # --------------------------------------------------------
 
     st.session_state.messages.append(
         {
@@ -1383,18 +1375,18 @@ if user_prompt:
             "content": user_prompt
         }
     )
+    st.rerun()
 
-    with st.chat_message(
-        "user",
-        avatar="👤"
-    ):
-        st.markdown(
-            user_prompt
-        )
 
-    # --------------------------------------------------------
-    # GENERATE AI RESPONSE
-    # --------------------------------------------------------
+# ============================================================
+# GENERATE RESPONSE IF LAST MESSAGE IS FROM USER
+# ============================================================
+
+if (
+    st.session_state.messages
+    and st.session_state.messages[-1]["role"] == "user"
+):
+    last_user_message = st.session_state.messages[-1]["content"]
 
     with st.chat_message(
         "assistant",
@@ -1405,8 +1397,8 @@ if user_prompt:
         ):
             try:
                 response = generate_support_response(
-                    user_prompt,
-                    st.session_state.messages
+                    last_user_message,
+                    st.session_state.messages[:-1]
                 )
             except Exception as error:
                 response = (
@@ -1414,58 +1406,35 @@ if user_prompt:
                     "your request right now. Please try "
                     "again in a moment."
                 )
-                st.session_state.last_error = str(
-                    error
-                )
+                st.session_state.last_error = str(error)
 
-        st.markdown(
-            response
-        )
+        st.markdown(response)
 
-    # --------------------------------------------------------
-    # HUMAN ESCALATION DETECTION
-    # --------------------------------------------------------
-
-    if response_requires_escalation(
-        response
-    ):
-        order_id = extract_order_id(
-            user_prompt
-        )
+    # Escalation detection
+    if response_requires_escalation(response):
+        order_id = extract_order_id(last_user_message)
 
         if not order_id:
             conversation_text = " ".join(
                 message["content"]
-                for message
-                in st.session_state.messages
+                for message in st.session_state.messages
                 if message["role"] == "user"
             )
+            order_id = extract_order_id(conversation_text)
 
-            order_id = extract_order_id(
-                conversation_text
-            )
-
-        case = create_escalation_case(
+        create_escalation_case(
             reason=response,
             order_id=order_id,
-            customer_message=user_prompt
+            customer_message=last_user_message
         )
 
-    # --------------------------------------------------------
-    # SAVE AI RESPONSE
-    # --------------------------------------------------------
-
+    # Append assistant response
     st.session_state.messages.append(
         {
             "role": "assistant",
             "content": response
         }
     )
-
-    # --------------------------------------------------------
-    # REFRESH SIDEBAR
-    # --------------------------------------------------------
-
     st.rerun()
 
 
@@ -1474,12 +1443,8 @@ if user_prompt:
 # ============================================================
 
 if st.session_state.pending_escalation:
-    case = (
-        st.session_state.pending_escalation
-    )
-
+    case = st.session_state.pending_escalation
     st.divider()
-
     st.success(
         f"Human support case **{case['case_id']}** "
         f"has been created. A support representative "
