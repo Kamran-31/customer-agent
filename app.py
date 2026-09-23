@@ -63,347 +63,344 @@ if not GEMINI_API_KEY:
 # ============================================================
 
 st.markdown(
-    """
-    <style>
-
-    /* ========================================================
-       GLOBAL
-    ======================================================== */
-
-    .stApp {
-        background: #f4f7fb;
-        color: #111827;
-    }
-
-    .main .block-container {
-        max-width: 1250px;
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-    }
-
-    #MainMenu {
-        visibility: hidden;
-    }
-
-    footer {
-        visibility: hidden;
-    }
-
-    header[data-testid="stHeader"] {
-        background: transparent;
-    }
-
-    .stMarkdown,
-    .stMarkdown p,
-    .stMarkdown span,
-    .stMarkdown div,
-    label {
-        color: #111827;
-    }
-
-    p {
-        color: #334155;
-    }
-
-
-    /* ========================================================
-       SIDEBAR
-    ======================================================== */
-
-    section[data-testid="stSidebar"] {
-        background: #111827;
-        border-right: 1px solid #263244;
-    }
-
-    section[data-testid="stSidebar"] * {
-        color: #e5e7eb;
-    }
-
-    section[data-testid="stSidebar"] .stMarkdown p {
-        color: #cbd5e1;
-    }
-
-    section[data-testid="stSidebar"] .stButton button {
-        background: #1f2937 !important;
-        border: 1px solid #374151 !important;
-        color: #f9fafb !important;
-        border-radius: 10px;
-    }
-
-    section[data-testid="stSidebar"] .stButton button p {
-        color: #f9fafb !important;
-    }
-
-    section[data-testid="stSidebar"] .stButton button:hover {
-        border-color: #818cf8 !important;
-        background: #273449 !important;
-        color: white !important;
-    }
-
-
-    /* ========================================================
-       HEADER
-    ======================================================== */
-
-    .zyvra-header {
-        background: linear-gradient(
-            135deg,
-            #172554 0%,
-            #312e81 50%,
-            #4c1d95 100%
-        );
-
-        border-radius: 22px;
-        padding: 28px 32px;
-        margin-bottom: 24px;
-
-        box-shadow:
-            0 12px 35px rgba(30, 41, 59, 0.15);
-
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .zyvra-header-title {
-        color: #ffffff !important;
-        font-size: 31px;
-        font-weight: 800;
-        letter-spacing: -0.8px;
-        margin: 0;
-    }
-
-    .zyvra-header-subtitle {
-        color: #c7d2fe !important;
-        font-size: 14px;
-        margin-top: 6px;
-    }
-
-    .zyvra-status {
-        display: inline-block;
-        background: rgba(34, 197, 94, 0.14);
-        color: #bbf7d0 !important;
-        border: 1px solid rgba(134, 239, 172, 0.2);
-        padding: 6px 11px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 600;
-        margin-bottom: 12px;
-    }
-
-
-    /* ========================================================
-       WELCOME
-    ======================================================== */
-
-    .welcome-title {
-        font-size: 30px;
-        font-weight: 800;
-        color: #0f172a !important;
-        margin-bottom: 4px;
-    }
-
-    .welcome-subtitle {
-        color: #64748b !important;
-        font-size: 15px;
-        margin-bottom: 22px;
-    }
-
-
-    /* ========================================================
-       FEATURE CARDS
-    ======================================================== */
-
-    .feature-card {
-        background: #ffffff !important;
-        border: 1px solid #dbe3ee;
-        border-radius: 16px;
-        padding: 18px;
-        min-height: 125px;
-
-        box-shadow:
-            0 4px 14px rgba(15, 23, 42, 0.05);
-    }
-
-    .feature-icon {
-        font-size: 24px;
-        margin-bottom: 8px;
-    }
-
-    .feature-title {
-        color: #111827 !important;
-        font-weight: 700;
-        font-size: 15px;
-    }
-
-    .feature-text {
-        color: #475569 !important;
-        font-size: 12px;
-        line-height: 1.5;
-        margin-top: 4px;
-    }
-
-
-    /* ========================================================
-       STATUS CARDS
-    ======================================================== */
-
-    .status-card {
-        background: #ffffff !important;
-        border: 1px solid #dbe3ee;
-        border-radius: 14px;
-        padding: 15px;
-        margin-bottom: 10px;
-
-        box-shadow:
-            0 3px 10px rgba(15, 23, 42, 0.04);
-    }
-
-    .status-label {
-        color: #64748b !important;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .status-value {
-        color: #0f172a !important;
-        font-weight: 700;
-        font-size: 15px;
-        margin-top: 3px;
-    }
-
-    .status-detail {
-        color: #475569 !important;
-        font-size: 11px;
-        margin-top: 5px;
-    }
-
-
-    /* ========================================================
-       BUTTONS
-    ======================================================== */
-
-    .stButton > button {
-        background: #ffffff !important;
-        color: #1e293b !important;
-
-        border: 1px solid #dbe3ee !important;
-        border-radius: 10px;
-
-        font-weight: 600;
-        min-height: 42px;
-    }
-
-    .stButton > button p {
-        color: #1e293b !important;
-    }
-
-    .stButton > button:hover {
-        background: #f8fafc !important;
-        border-color: #6366f1 !important;
-        color: #4338ca !important;
-    }
-
-    .stButton > button:hover p {
-        color: #4338ca !important;
-    }
-
-
-    /* ========================================================
-       CHAT INPUT
-    ======================================================== */
-
-    [data-testid="stChatInput"] {
-        background: #ffffff !important;
-        border-radius: 16px;
-    }
-
-    [data-testid="stChatInput"] textarea {
-        color: #111827 !important;
-        background: #ffffff !important;
-    }
-
-    [data-testid="stChatInput"] textarea::placeholder {
-        color: #94a3b8 !important;
-    }
-
-
-    /* ========================================================
-       CHAT MESSAGES
-    ======================================================== */
-
-    [data-testid="stChatMessageContent"] {
-        color: #1e293b !important;
-        font-size: 14px;
-        line-height: 1.65;
-    }
-
-    [data-testid="stChatMessageContent"] p {
-        color: #1e293b !important;
-    }
-
-
-    /* ========================================================
-       INPUTS
-    ======================================================== */
-
-    input,
-    textarea {
-        color: #111827 !important;
-        background-color: #ffffff !important;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-        color: #94a3b8 !important;
-    }
-
-    [data-baseweb="select"] {
-        background-color: #ffffff !important;
-    }
-
-    [data-baseweb="select"] * {
-        color: #111827 !important;
-    }
-
-
-    /* ========================================================
-       ALERTS
-    ======================================================== */
-
-    [data-testid="stAlert"] {
-        color: #1e293b !important;
-    }
-
-    [data-testid="stAlert"] p {
-        color: #1e293b !important;
-    }
-
-
-    /* ========================================================
-       DIVIDER
-    ======================================================== */
-
-    .soft-divider {
-        height: 1px;
-        background: #e2e8f0;
-        margin: 22px 0;
-    }
-
-
-    /* ========================================================
-       FOOTER
-    ======================================================== */
-
-    .zyvra-footer {
-        text-align: center;
-        color: #94a3b8 !important;
-        font-size: 11px;
-        margin-top: 35px;
-        padding-top: 15px;
-    }
-
-    </style>
-    """,
+    """<style>
+/* ========================================================
+   GLOBAL
+======================================================== */
+
+.stApp {
+    background: #f4f7fb;
+    color: #111827;
+}
+
+.main .block-container {
+    max-width: 1250px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header[data-testid="stHeader"] {
+    background: transparent;
+}
+
+.stMarkdown,
+.stMarkdown p,
+.stMarkdown span,
+.stMarkdown div,
+label {
+    color: #111827;
+}
+
+p {
+    color: #334155;
+}
+
+
+/* ========================================================
+   SIDEBAR
+======================================================== */
+
+section[data-testid="stSidebar"] {
+    background: #111827;
+    border-right: 1px solid #263244;
+}
+
+section[data-testid="stSidebar"] * {
+    color: #e5e7eb;
+}
+
+section[data-testid="stSidebar"] .stMarkdown p {
+    color: #cbd5e1;
+}
+
+section[data-testid="stSidebar"] .stButton button {
+    background: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    color: #f9fafb !important;
+    border-radius: 10px;
+}
+
+section[data-testid="stSidebar"] .stButton button p {
+    color: #f9fafb !important;
+}
+
+section[data-testid="stSidebar"] .stButton button:hover {
+    border-color: #818cf8 !important;
+    background: #273449 !important;
+    color: white !important;
+}
+
+
+/* ========================================================
+   HEADER
+======================================================== */
+
+.zyvra-header {
+    background: linear-gradient(
+        135deg,
+        #172554 0%,
+        #312e81 50%,
+        #4c1d95 100%
+    );
+
+    border-radius: 22px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+
+    box-shadow:
+        0 12px 35px rgba(30, 41, 59, 0.15);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zyvra-header-title {
+    color: #ffffff !important;
+    font-size: 31px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    margin: 0;
+}
+
+.zyvra-header-subtitle {
+    color: #c7d2fe !important;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.zyvra-status {
+    display: inline-block;
+    background: rgba(34, 197, 94, 0.14);
+    color: #bbf7d0 !important;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+
+/* ========================================================
+   WELCOME
+======================================================== */
+
+.welcome-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a !important;
+    margin-bottom: 4px;
+}
+
+.welcome-subtitle {
+    color: #64748b !important;
+    font-size: 15px;
+    margin-bottom: 22px;
+}
+
+
+/* ========================================================
+   FEATURE CARDS
+======================================================== */
+
+.feature-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe3ee;
+    border-radius: 16px;
+    padding: 18px;
+    min-height: 125px;
+
+    box-shadow:
+        0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.feature-title {
+    color: #111827 !important;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.feature-text {
+    color: #475569 !important;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+
+/* ========================================================
+   STATUS CARDS
+======================================================== */
+
+.status-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe3ee;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 10px;
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.04);
+}
+
+.status-label {
+    color: #64748b !important;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-value {
+    color: #0f172a !important;
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 3px;
+}
+
+.status-detail {
+    color: #475569 !important;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+
+/* ========================================================
+   BUTTONS
+======================================================== */
+
+.stButton > button {
+    background: #ffffff !important;
+    color: #1e293b !important;
+
+    border: 1px solid #dbe3ee !important;
+    border-radius: 10px;
+
+    font-weight: 600;
+    min-height: 42px;
+}
+
+.stButton > button p {
+    color: #1e293b !important;
+}
+
+.stButton > button:hover {
+    background: #f8fafc !important;
+    border-color: #6366f1 !important;
+    color: #4338ca !important;
+}
+
+.stButton > button:hover p {
+    color: #4338ca !important;
+}
+
+
+/* ========================================================
+   CHAT INPUT
+======================================================== */
+
+[data-testid="stChatInput"] {
+    background: #ffffff !important;
+    border-radius: 16px;
+}
+
+[data-testid="stChatInput"] textarea {
+    color: #111827 !important;
+    background: #ffffff !important;
+}
+
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+
+/* ========================================================
+   CHAT MESSAGES
+======================================================== */
+
+[data-testid="stChatMessageContent"] {
+    color: #1e293b !important;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+[data-testid="stChatMessageContent"] p {
+    color: #1e293b !important;
+}
+
+
+/* ========================================================
+   INPUTS
+======================================================== */
+
+input,
+textarea {
+    color: #111827 !important;
+    background-color: #ffffff !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+[data-baseweb="select"] {
+    background-color: #ffffff !important;
+}
+
+[data-baseweb="select"] * {
+    color: #111827 !important;
+}
+
+
+/* ========================================================
+   ALERTS
+======================================================== */
+
+[data-testid="stAlert"] {
+    color: #1e293b !important;
+}
+
+[data-testid="stAlert"] p {
+    color: #1e293b !important;
+}
+
+
+/* ========================================================
+   DIVIDER
+======================================================== */
+
+.soft-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 22px 0;
+}
+
+
+/* ========================================================
+   FOOTER
+======================================================== */
+
+.zyvra-footer {
+    text-align: center;
+    color: #94a3b8 !important;
+    font-size: 11px;
+    margin-top: 35px;
+    padding-top: 15px;
+}
+</style>
+""",
     unsafe_allow_html=True,
 )
 
@@ -1194,24 +1191,18 @@ def create_escalation_case(
 # ============================================================
 
 st.markdown(
-    """
-    <div class="zyvra-header">
-
-        <div class="zyvra-status">
-            ● Online · AI Support
-        </div>
-
-        <div class="zyvra-header-title">
-            Zyvra
-        </div>
-
-        <div class="zyvra-header-subtitle">
-            Fast answers. Clear support.
-            Human escalation when needed.
-        </div>
-
-    </div>
-    """,
+    """<div class="zyvra-header">
+<div class="zyvra-status">
+    ● Online · AI Support
+</div>
+<div class="zyvra-header-title">
+    Zyvra
+</div>
+<div class="zyvra-header-subtitle">
+    Fast answers. Clear support.
+    Human escalation when needed.
+</div>
+</div>""",
     unsafe_allow_html=True
 )
 
@@ -1241,19 +1232,14 @@ with st.sidebar:
     )
 
     st.markdown(
-        f"""
-        <div class="status-card">
-
-            <div class="status-label">
-                Conversation
-            </div>
-
-            <div class="status-value">
-                {st.session_state.conversation_id[:8]}
-            </div>
-
-        </div>
-        """,
+        f"""<div class="status-card">
+<div class="status-label">
+    Conversation
+</div>
+<div class="status-value">
+    {st.session_state.conversation_id[:8]}
+</div>
+</div>""",
         unsafe_allow_html=True
     )
 
@@ -1300,27 +1286,20 @@ with st.sidebar:
         ):
 
             st.markdown(
-                f"""
-                <div class="status-card">
-
-                    <div class="status-label">
-                        {case["status"]} · {case["priority"]}
-                    </div>
-
-                    <div class="status-value">
-                        {case["case_id"]}
-                    </div>
-
-                    <div class="status-detail">
-                        Order: {case["order_id"]}
-                    </div>
-
-                    <div class="status-detail">
-                        {case["created_at"]}
-                    </div>
-
-                </div>
-                """,
+                f"""<div class="status-card">
+<div class="status-label">
+    {case["status"]} · {case["priority"]}
+</div>
+<div class="status-value">
+    {case["case_id"]}
+</div>
+<div class="status-detail">
+    Order: {case["order_id"]}
+</div>
+<div class="status-detail">
+    {case["created_at"]}
+</div>
+</div>""",
                 unsafe_allow_html=True
             )
 
@@ -1364,31 +1343,22 @@ with st.sidebar:
         order_status = "No data"
 
     st.markdown(
-        f"""
-        <div class="status-card">
-
-            <div class="status-label">
-                Knowledge Base
-            </div>
-
-            <div class="status-value">
-                {kb_status}
-            </div>
-
-        </div>
-
-        <div class="status-card">
-
-            <div class="status-label">
-                Orders Database
-            </div>
-
-            <div class="status-value">
-                {order_status}
-            </div>
-
-        </div>
-        """,
+        f"""<div class="status-card">
+<div class="status-label">
+    Knowledge Base
+</div>
+<div class="status-value">
+    {kb_status}
+</div>
+</div>
+<div class="status-card">
+<div class="status-label">
+    Orders Database
+</div>
+<div class="status-value">
+    {order_status}
+</div>
+</div>""",
         unsafe_allow_html=True
     )
 
@@ -1400,17 +1370,12 @@ with st.sidebar:
 if not st.session_state.messages:
 
     st.markdown(
-        '<div class="welcome-title">'
-        'How can we help?'
-        '</div>',
+        '<div class="welcome-title">How can we help?</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        '<div class="welcome-subtitle">'
-        'Ask about orders, delivery, policies, products, '
-        'refunds, or any other support question.'
-        '</div>',
+        '<div class="welcome-subtitle">Ask about orders, delivery, policies, products, refunds, or any other support question.</div>',
         unsafe_allow_html=True
     )
 
@@ -1419,72 +1384,51 @@ if not st.session_state.messages:
     with col1:
 
         st.markdown(
-            """
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    📦
-                </div>
-
-                <div class="feature-title">
-                    Order Support
-                </div>
-
-                <div class="feature-text">
-                    Check order information and get help
-                    with order-related questions.
-                </div>
-
-            </div>
-            """,
+            """<div class="feature-card">
+<div class="feature-icon">
+    📦
+</div>
+<div class="feature-title">
+    Order Support
+</div>
+<div class="feature-text">
+    Check order information and get help with order-related questions.
+</div>
+</div>""",
             unsafe_allow_html=True
         )
 
     with col2:
 
         st.markdown(
-            """
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    🔎
-                </div>
-
-                <div class="feature-title">
-                    Knowledge Search
-                </div>
-
-                <div class="feature-text">
-                    Get accurate answers from Zyvra's
-                    internal support knowledge base.
-                </div>
-
-            </div>
-            """,
+            """<div class="feature-card">
+<div class="feature-icon">
+    🔎
+</div>
+<div class="feature-title">
+    Knowledge Search
+</div>
+<div class="feature-text">
+    Get accurate answers from Zyvra's internal support knowledge base.
+</div>
+</div>""",
             unsafe_allow_html=True
         )
 
     with col3:
 
         st.markdown(
-            """
-            <div class="feature-card">
-
-                <div class="feature-icon">
-                    👤
-                </div>
-
-                <div class="feature-title">
-                    Human Escalation
-                </div>
-
-                <div class="feature-text">
-                    Complex cases can be forwarded to
-                    human support when required.
-                </div>
-
-            </div>
-            """,
+            """<div class="feature-card">
+<div class="feature-icon">
+    👤
+</div>
+<div class="feature-title">
+    Human Escalation
+</div>
+<div class="feature-text">
+    Complex cases can be forwarded to human support when required.
+</div>
+</div>""",
             unsafe_allow_html=True
         )
 
@@ -1691,10 +1635,8 @@ if st.session_state.pending_escalation:
 # ============================================================
 
 st.markdown(
-    """
-    <div class="zyvra-footer">
-        Zyvra AI Support · Powered by RAG + Agentic AI
-    </div>
-    """,
+    """<div class="zyvra-footer">
+    Zyvra AI Support · Powered by RAG + Agentic AI
+</div>""",
     unsafe_allow_html=True
 )
