@@ -73,9 +73,10 @@ st.markdown(
 }
 
 .main .block-container {
-    max-width: 1250px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    padding-bottom: 3.5rem;
 }
 
 #MainMenu {
@@ -141,48 +142,65 @@ section[data-testid="stSidebar"] .stButton button:hover {
 .zyvra-header {
     background: linear-gradient(
         135deg,
-        #172554 0%,
+        #1e1b4b 0%,
         #312e81 50%,
-        #4c1d95 100%
+        #4338ca 100%
     );
-    border-radius: 22px;
-    padding: 28px 32px;
+    border-radius: 20px;
+    padding: 24px 30px;
     margin-bottom: 24px;
-    box-shadow: 0 12px 35px rgba(30, 41, 59, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(30, 27, 75, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
 }
 
 .zyvra-header-title {
     color: #ffffff !important;
-    font-size: 31px;
+    font-size: 26px;
     font-weight: 800;
-    letter-spacing: -0.8px;
+    letter-spacing: -0.6px;
     margin: 0;
 }
 
 .zyvra-header-subtitle {
     color: #c7d2fe !important;
-    font-size: 14px;
-    margin-top: 6px;
+    font-size: 13.5px;
+    margin-top: 4px;
 }
 
 .zyvra-status {
-    display: inline-block;
-    background: rgba(34, 197, 94, 0.14);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(34, 197, 94, 0.18);
     color: #bbf7d0 !important;
-    border: 1px solid rgba(134, 239, 172, 0.2);
-    padding: 6px 11px;
+    border: 1px solid rgba(134, 239, 172, 0.3);
+    padding: 5px 12px;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+.zyvra-badge-tag {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #e0e7ff !important;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 12px;
+    white-space: nowrap;
+    text-align: center;
 }
 
 /* ========================================================
    WELCOME
 ======================================================== */
 .welcome-title {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 800;
     color: #0f172a !important;
     margin-bottom: 4px;
@@ -190,8 +208,8 @@ section[data-testid="stSidebar"] .stButton button:hover {
 
 .welcome-subtitle {
     color: #64748b !important;
-    font-size: 15px;
-    margin-bottom: 22px;
+    font-size: 14px;
+    margin-bottom: 20px;
 }
 
 /* ========================================================
@@ -199,29 +217,38 @@ section[data-testid="stSidebar"] .stButton button:hover {
 ======================================================== */
 .feature-card {
     background: #ffffff !important;
-    border: 1px solid #dbe3ee;
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 18px;
-    min-height: 125px;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    padding: 20px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
 .feature-icon {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 26px;
+    margin-bottom: 10px;
 }
 
 .feature-title {
-    color: #111827 !important;
+    color: #0f172a !important;
     font-weight: 700;
     font-size: 15px;
+    margin-bottom: 4px;
 }
 
 .feature-text {
-    color: #475569 !important;
-    font-size: 12px;
+    color: #64748b !important;
+    font-size: 13px;
     line-height: 1.5;
-    margin-top: 4px;
 }
 
 /* ========================================================
@@ -231,7 +258,7 @@ section[data-testid="stSidebar"] .stButton button:hover {
     background: #ffffff !important;
     border: 1px solid #dbe3ee;
     border-radius: 14px;
-    padding: 15px;
+    padding: 14px;
     margin-bottom: 10px;
     box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
 }
@@ -246,7 +273,7 @@ section[data-testid="stSidebar"] .stButton button:hover {
 .status-value {
     color: #0f172a !important;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14.5px;
     margin-top: 3px;
     word-break: break-word;
 }
@@ -263,10 +290,12 @@ section[data-testid="stSidebar"] .stButton button:hover {
 .stButton > button {
     background: #ffffff !important;
     color: #1e293b !important;
-    border: 1px solid #dbe3ee !important;
-    border-radius: 10px;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px;
     font-weight: 600;
-    min-height: 42px;
+    font-size: 13.5px;
+    min-height: 44px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .stButton > button p {
@@ -289,6 +318,8 @@ section[data-testid="stSidebar"] .stButton button:hover {
 [data-testid="stChatInput"] {
     background: #ffffff !important;
     border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid #cbd5e1;
 }
 
 [data-testid="stChatInput"] textarea {
@@ -305,7 +336,7 @@ section[data-testid="stSidebar"] .stButton button:hover {
 ======================================================== */
 [data-testid="stChatMessageContent"] {
     color: #1e293b !important;
-    font-size: 14px;
+    font-size: 14.5px;
     line-height: 1.65;
 }
 
@@ -352,18 +383,7 @@ textarea::placeholder {
 .soft-divider {
     height: 1px;
     background: #e2e8f0;
-    margin: 22px 0;
-}
-
-/* ========================================================
-   FOOTER
-======================================================== */
-.zyvra-footer {
-    text-align: center;
-    color: #94a3b8 !important;
-    font-size: 11px;
-    margin-top: 35px;
-    padding-top: 15px;
+    margin: 22px 0 16px 0;
 }
 </style>""",
     unsafe_allow_html=True,
@@ -1056,9 +1076,12 @@ def create_escalation_case(
 
 st.markdown(
     """<div class="zyvra-header">
-<div class="zyvra-status">● Online · AI Support</div>
-<div class="zyvra-header-title">Zyvra</div>
-<div class="zyvra-header-subtitle">Fast answers. Clear support. Human escalation when needed.</div>
+    <div>
+        <div class="zyvra-status">● Online · AI Support</div>
+        <div class="zyvra-header-title">Zyvra Support Center</div>
+        <div class="zyvra-header-subtitle">Fast answers. Order lookups. Human escalation when needed.</div>
+    </div>
+    <div class="zyvra-badge-tag">RAG + Agentic AI Engine</div>
 </div>""",
     unsafe_allow_html=True
 )
@@ -1185,6 +1208,8 @@ with st.sidebar:
         unsafe_allow_html=True
     )
 
+    st.caption("Powered by RAG + Agentic AI")
+
 
 # ============================================================
 # WELCOME SCREEN
@@ -1192,12 +1217,12 @@ with st.sidebar:
 
 if not st.session_state.messages:
     st.markdown(
-        '<div class="welcome-title">How can we help?</div>',
+        '<div class="welcome-title">How can we help today?</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        '<div class="welcome-subtitle">Ask about orders, delivery, policies, products, refunds, or any other support question.</div>',
+        '<div class="welcome-subtitle">Ask about orders, delivery, policies, products, returns, or request human escalation.</div>',
         unsafe_allow_html=True
     )
 
@@ -1208,7 +1233,7 @@ if not st.session_state.messages:
             """<div class="feature-card">
 <div class="feature-icon">📦</div>
 <div class="feature-title">Order Support</div>
-<div class="feature-text">Check order information and get help with order-related questions.</div>
+<div class="feature-text">Check real-time order status, tracking, and details with your order ID.</div>
 </div>""",
             unsafe_allow_html=True
         )
@@ -1218,7 +1243,7 @@ if not st.session_state.messages:
             """<div class="feature-card">
 <div class="feature-icon">🔎</div>
 <div class="feature-title">Knowledge Search</div>
-<div class="feature-text">Get accurate answers from Zyvra's internal support knowledge base.</div>
+<div class="feature-text">Instantly search Zyvra's verified policies, FAQs, and product guidance.</div>
 </div>""",
             unsafe_allow_html=True
         )
@@ -1228,7 +1253,7 @@ if not st.session_state.messages:
             """<div class="feature-card">
 <div class="feature-icon">👤</div>
 <div class="feature-title">Human Escalation</div>
-<div class="feature-text">Complex cases can be forwarded to human support when required.</div>
+<div class="feature-text">Seamlessly hand off complex issues or disputes to a live support rep.</div>
 </div>""",
             unsafe_allow_html=True
         )
@@ -1425,13 +1450,3 @@ if st.session_state.pending_escalation:
         f"has been created. A support representative "
         f"can review the case."
     )
-
-
-# ============================================================
-# FOOTER
-# ============================================================
-
-st.markdown(
-    """<div class="zyvra-footer">Zyvra AI Support · Powered by RAG + Agentic AI</div>""",
-    unsafe_allow_html=True
-)
