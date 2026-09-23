@@ -454,10 +454,7 @@ if "last_order" not in st.session_state:
 
 def find_knowledge_file():
     possible_files = [
-        DATA_DIR / "knowledge.txt",
-        DATA_DIR / "knowledge_base.txt",
-        DATA_DIR / "knowledge.md",
-        DATA_DIR / "knowledge_base.md",
+        DATA_DIR / "Zyvora_Customer_Support_Handbook.md",
     ]
 
     for file in possible_files:
