@@ -29,7 +29,6 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 EMBEDDINGS_DIR = BASE_DIR / "embeddings"
 
-HANDBOOK_PATH = DATA_DIR / "Zyvra_Customer_Support_Handbook.md"
 ORDERS_PATH = DATA_DIR / "Zyvra_orders_database.xlsx"
 
 CHUNKS_PATH = EMBEDDINGS_DIR / "chunks.json"
@@ -38,7 +37,7 @@ EMBEDDING_CONFIG_PATH = EMBEDDINGS_DIR / "embedding_config.json"
 
 
 # ============================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================================================
 
 st.set_page_config(
@@ -46,113 +45,6 @@ st.set_page_config(
     page_icon="✦",
     layout="wide",
     initial_sidebar_state="expanded",
-)
-
-
-# ============================================================
-# STREAMLIT NATIVE STYLING
-# ============================================================
-
-st.markdown(
-    """
-    <style>
-
-    .stApp {
-        background-color: #f8fafc;
-    }
-
-    .block-container {
-        max-width: 1150px;
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-    }
-
-    .zyvra-header {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 22px;
-        padding: 26px 30px;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
-    }
-
-    .online-status {
-        display: inline-block;
-        background: #ecfdf5;
-        color: #047857;
-        border-radius: 999px;
-        padding: 5px 11px;
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-
-    .zyvra-logo {
-        font-size: 38px;
-        font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -1.5px;
-        line-height: 1.1;
-    }
-
-    .zyvra-tagline {
-        color: #64748b;
-        font-size: 16px;
-        margin-top: 6px;
-    }
-
-    .welcome-box {
-        text-align: center;
-        padding: 45px 20px 30px;
-    }
-
-    .welcome-title {
-        font-size: 30px;
-        font-weight: 700;
-        color: #0f172a;
-    }
-
-    .welcome-text {
-        color: #64748b;
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .pending-card {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 9px;
-    }
-
-    .case-id {
-        font-weight: 700;
-        color: #0f172a;
-    }
-
-    .case-meta {
-        font-size: 12px;
-        color: #64748b;
-    }
-
-    .case-summary {
-        font-size: 13px;
-        color: #334155;
-        margin-top: 6px;
-    }
-
-    div[data-testid="stChatMessage"] {
-        border-radius: 16px;
-    }
-
-    .stButton > button {
-        border-radius: 10px;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True,
 )
 
 
@@ -184,7 +76,7 @@ def load_knowledge_store():
 
     if not CHUNKS_PATH.exists():
         raise FileNotFoundError(
-            f"chunks.json was not found at:\n{CHUNKS_PATH}"
+            f"chunks.json not found at:\n{CHUNKS_PATH}"
         )
 
     with open(
@@ -199,6 +91,10 @@ def load_knowledge_store():
             "chunks.json is empty."
         )
 
+    # --------------------------------------------------------
+    # Load embedding model
+    # --------------------------------------------------------
+
     model = SentenceTransformer(
         EMBEDDING_MODEL
     )
@@ -207,15 +103,15 @@ def load_knowledge_store():
 
     if dimension != EMBEDDING_DIMENSION:
         raise RuntimeError(
-            f"Embedding dimension mismatch. "
-            f"Expected {EMBEDDING_DIMENSION}, "
-            f"got {dimension}."
+            f"Expected embedding dimension "
+            f"{EMBEDDING_DIMENSION}, "
+            f"but received {dimension}."
         )
 
     index = None
 
     # --------------------------------------------------------
-    # Load existing index
+    # Load existing FAISS index
     # --------------------------------------------------------
 
     if INDEX_PATH.exists():
@@ -251,7 +147,7 @@ def load_knowledge_store():
 
         if not any(texts):
             raise RuntimeError(
-                "No text was found in chunks.json."
+                "No text found inside chunks.json."
             )
 
         embeddings = model.encode(
@@ -308,7 +204,7 @@ def load_orders():
 
     if not ORDERS_PATH.exists():
         raise FileNotFoundError(
-            f"Order database was not found at:\n{ORDERS_PATH}"
+            f"Order database not found at:\n{ORDERS_PATH}"
         )
 
     df = pd.read_excel(
@@ -357,16 +253,16 @@ def search_knowledge(
         if idx < 0:
             continue
 
-        item = dict(
+        result = dict(
             chunks[int(idx)]
         )
 
-        item["similarity"] = round(
+        result["similarity"] = round(
             float(score),
             4
         )
 
-        results.append(item)
+        results.append(result)
 
     return results
 
@@ -388,8 +284,7 @@ def lookup_order(
     df = load_orders()
 
     matches = df[
-        df["Order ID"]
-        .str.upper()
+        df["Order ID"].str.upper()
         == order_id
     ]
 
@@ -419,9 +314,9 @@ class KnowledgeSearchTool(BaseTool):
     name: str = "search_zyvra_knowledge"
 
     description: str = (
-        "Search the Zyvra company knowledge base. "
-        "Use for policies, shipping, returns, warranty, "
-        "payments, products, troubleshooting and support."
+        "Search the Zyvra knowledge base for company "
+        "policies, shipping, returns, warranty, payments, "
+        "products, troubleshooting and support information."
     )
 
     args_schema: type[BaseModel] = KnowledgeSearchInput
@@ -437,7 +332,7 @@ class KnowledgeSearchTool(BaseTool):
         )
 
         if not results:
-            return "No relevant knowledge was found."
+            return "No relevant Zyvra information was found."
 
         output = []
 
@@ -473,8 +368,8 @@ class OrderLookupTool(BaseTool):
     name: str = "lookup_order_database"
 
     description: str = (
-        "Look up an order from Zyvra's simulated Excel "
-        "order database."
+        "Look up a customer's order from the "
+        "Zyvra Excel order database."
     )
 
     args_schema: type[BaseModel] = OrderLookupInput
@@ -489,6 +384,7 @@ class OrderLookupTool(BaseTool):
         )
 
         if order is None:
+
             return (
                 f"No order was found for "
                 f"{order_id.strip().upper()}."
@@ -501,7 +397,7 @@ class OrderLookupTool(BaseTool):
 
 
 # ============================================================
-# SINGLE CREWAI AGENT
+# BUILD SINGLE CREWAI AGENT
 # ============================================================
 
 def build_agent():
@@ -510,7 +406,7 @@ def build_agent():
 
         raise RuntimeError(
             "GEMINI_API_KEY is missing from "
-            "Streamlit Secrets."
+            "Streamlit Cloud Secrets."
         )
 
     llm = LLM(
@@ -525,8 +421,8 @@ def build_agent():
         goal=(
             "Resolve customer support questions accurately "
             "using Zyvra's knowledge base and order database. "
-            "Never invent information and escalate when "
-            "human intervention is required."
+            "Never invent information and escalate unresolved "
+            "issues to human support."
         ),
 
         backstory=(
@@ -615,7 +511,7 @@ def user_requests_human(
 
 
 # ============================================================
-# PARSE AGENT RESPONSE
+# PARSE AGENT JSON
 # ============================================================
 
 def parse_agent_json(
@@ -675,7 +571,7 @@ def parse_agent_json(
 
 
 # ============================================================
-# RUN AGENT
+# RUN CREWAI
 # ============================================================
 
 def run_support_agent(
@@ -695,7 +591,7 @@ LATEST CUSTOMER MESSAGE:
 PREVIOUS CONVERSATION:
 {get_conversation_context()}
 
-RULES:
+INSTRUCTIONS:
 
 1. Answer the customer's actual question.
 
@@ -707,23 +603,22 @@ RULES:
 
 4. Never invent order information.
 
-5. If an order question does not contain an Order ID,
-   ask the customer for their Order ID.
+5. If the customer asks about an order without providing
+   an Order ID, ask them for the Order ID.
 
-6. Maintain conversation context.
+6. Maintain the conversation context.
 
-7. If the issue cannot be reliably resolved,
-   escalate it to human support.
+7. If the issue cannot be reliably resolved, escalate it.
 
-8. Escalate disputes, unresolved complaints,
-   sensitive account issues, approval-dependent
-   refunds/returns, warranty decisions requiring
-   inspection, or insufficient-information cases.
+8. Escalate disputes, unresolved complaints, sensitive
+   account issues, approval-dependent refunds/returns,
+   warranty decisions requiring inspection, and cases
+   where the available information is insufficient.
 
-9. Never request passwords, OTPs, CVVs,
-   full card numbers or other authentication secrets.
+9. Never request passwords, OTPs, CVVs, full card numbers
+   or other authentication secrets.
 
-10. Keep the response professional and concise.
+10. Be professional, friendly and concise.
 
 Return JSON ONLY:
 
@@ -733,7 +628,7 @@ Return JSON ONLY:
     "escalation_summary": ""
 }}
 
-For escalation:
+If escalation is required:
 
 {{
     "response": "customer-facing response",
@@ -743,8 +638,8 @@ For escalation:
 """,
 
         expected_output=(
-            "Valid JSON with response, escalate "
-            "and escalation_summary."
+            "Valid JSON containing response, "
+            "escalate and escalation_summary."
         ),
 
         agent=agent,
@@ -833,7 +728,7 @@ def create_pending_case(
 
 with st.sidebar:
 
-    st.markdown("## ✦ Zyvra")
+    st.title("✦ Zyvra")
 
     st.caption(
         "AI Customer Support"
@@ -841,36 +736,34 @@ with st.sidebar:
 
     st.divider()
 
-    st.markdown(
-        "### Pending Human Support"
+    st.subheader(
+        "Pending Human Support"
     )
 
     if st.session_state.pending_cases:
 
         for case in st.session_state.pending_cases:
 
-            st.markdown(
-                f"""
-                <div class="pending-card">
+            with st.container(
+                border=True
+            ):
 
-                    <div class="case-id">
-                        {case["case_id"]}
-                    </div>
+                st.markdown(
+                    f"**{case['case_id']}**"
+                )
 
-                    <div class="case-meta">
-                        {case["created_at"]}
-                        ·
-                        {case["order_id"]}
-                    </div>
+                st.caption(
+                    f"{case['created_at']} · "
+                    f"{case['order_id']}"
+                )
 
-                    <div class="case-summary">
-                        {case["summary"]}
-                    </div>
+                st.write(
+                    case["summary"]
+                )
 
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+                st.caption(
+                    case["status"]
+                )
 
     else:
 
@@ -892,37 +785,25 @@ with st.sidebar:
     st.divider()
 
     st.caption(
-        "Zyvra can answer support questions, "
-        "check orders and escalate unresolved "
-        "issues to human support."
+        "Ask about orders, shipping, returns, "
+        "warranty, products or technical support."
     )
 
 
 # ============================================================
-# MAIN ZYVRA HEADER
+# NATIVE ZYVRA HEADER
 # ============================================================
 
-st.markdown(
-    """
-    <div class="zyvra-header">
+st.caption("● Online · AI Support")
 
-        <div class="online-status">
-            ● Online · AI Support
-        </div>
+st.title("Zyvra")
 
-        <div class="zyvra-logo">
-            Zyvra
-        </div>
-
-        <div class="zyvra-tagline">
-            Fast answers. Clear support.
-            Human escalation when needed.
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True
+st.write(
+    "Fast answers. Clear support. "
+    "Human escalation when needed."
 )
+
+st.divider()
 
 
 # ============================================================
@@ -931,26 +812,17 @@ st.markdown(
 
 if not st.session_state.messages:
 
-    st.markdown(
-        """
-        <div class="welcome-box">
-
-            <div class="welcome-title">
-                How can we help?
-            </div>
-
-            <div class="welcome-text">
-                Ask about an order, shipping, returns,
-                warranty, payments, products or
-                technical support.
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.subheader(
+        "How can we help?"
     )
 
-    # Native Streamlit suggestion buttons
+    st.write(
+        "Ask about an order, shipping, returns, "
+        "warranty, payments, products or technical support."
+    )
+
+    st.write("")
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -1046,7 +918,7 @@ if prompt:
         ):
 
             # ------------------------------------------------
-            # Direct human request
+            # CUSTOMER REQUESTED HUMAN
             # ------------------------------------------------
 
             if user_requests_human(prompt):
@@ -1124,6 +996,10 @@ if prompt:
                                 "resolve the customer's request."
                             )
 
+                    # ----------------------------------------
+                    # ESCALATE
+                    # ----------------------------------------
+
                     if escalate:
 
                         case = create_pending_case(
@@ -1142,7 +1018,7 @@ if prompt:
                             "to the pending human-support queue."
                         )
 
-                except Exception as error:
+                except Exception:
 
                     case = create_pending_case(
 
