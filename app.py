@@ -12,7 +12,6 @@ import faiss
 
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
-from pypdf import PdfReader
 
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.tools import tool
