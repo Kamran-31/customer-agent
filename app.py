@@ -93,56 +93,118 @@ st.markdown(
         background: transparent;
     }
 
-    .stMarkdown,
-    .stMarkdown p,
-    .stMarkdown span,
-    .stMarkdown div,
-    label {
-        color: #111827;
-    }
 
-    p {
+    /* ========================================================
+       MAIN CONTENT TEXT
+    ======================================================== */
+
+    .main p {
         color: #334155;
     }
 
+    .main h1,
+    .main h2,
+    .main h3,
+    .main h4,
+    .main h5,
+    .main h6 {
+        color: #0f172a;
+    }
+
 
     /* ========================================================
-       SIDEBAR
+       SIDEBAR BASE
     ======================================================== */
 
     section[data-testid="stSidebar"] {
-        background: #111827;
+        background: #111827 !important;
         border-right: 1px solid #263244;
     }
 
-    section[data-testid="stSidebar"] * {
-        color: #e5e7eb;
+    /* Sidebar text by default */
+    section[data-testid="stSidebar"] .stMarkdown {
+        color: #e5e7eb !important;
     }
 
     section[data-testid="stSidebar"] .stMarkdown p {
-        color: #cbd5e1;
+        color: #cbd5e1 !important;
     }
 
-    section[data-testid="stSidebar"] .stButton button {
-        background: #1f2937 !important;
-        border: 1px solid #374151 !important;
-        color: #f9fafb !important;
-        border-radius: 10px;
-    }
-
-    section[data-testid="stSidebar"] .stButton button p {
-        color: #f9fafb !important;
-    }
-
-    section[data-testid="stSidebar"] .stButton button:hover {
-        border-color: #818cf8 !important;
-        background: #273449 !important;
-        color: white !important;
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {
+        color: #f8fafc !important;
     }
 
 
     /* ========================================================
-       HEADER
+       SIDEBAR WHITE STATUS CARDS
+       IMPORTANT: OVERRIDE SIDEBAR TEXT COLOR
+    ======================================================== */
+
+    section[data-testid="stSidebar"] .status-card {
+        background: #ffffff !important;
+        border: 1px solid #dbe3ee !important;
+        border-radius: 14px;
+
+        padding: 15px;
+        margin-bottom: 10px;
+
+        box-shadow:
+            0 3px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    section[data-testid="stSidebar"] .status-card .status-label {
+        color: #64748b !important;
+    }
+
+    section[data-testid="stSidebar"] .status-card .status-value {
+        color: #0f172a !important;
+    }
+
+    section[data-testid="stSidebar"] .status-card .status-detail {
+        color: #475569 !important;
+    }
+
+    /* Force every element inside white status cards */
+    section[data-testid="stSidebar"] .status-card * {
+        color: #0f172a !important;
+    }
+
+    section[data-testid="stSidebar"] .status-card .status-label {
+        color: #64748b !important;
+    }
+
+    section[data-testid="stSidebar"] .status-card .status-detail {
+        color: #475569 !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR BUTTONS
+    ======================================================== */
+
+    section[data-testid="stSidebar"] .stButton > button {
+        background: #1f2937 !important;
+        color: #f8fafc !important;
+
+        border: 1px solid #374151 !important;
+        border-radius: 10px;
+    }
+
+    section[data-testid="stSidebar"] .stButton > button p {
+        color: #f8fafc !important;
+    }
+
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        background: #273449 !important;
+        border-color: #818cf8 !important;
+    }
+
+
+    /* ========================================================
+       ZYVRA HEADER
     ======================================================== */
 
     .zyvra-header {
@@ -179,13 +241,20 @@ st.markdown(
 
     .zyvra-status {
         display: inline-block;
+
         background: rgba(34, 197, 94, 0.14);
+
         color: #bbf7d0 !important;
+
         border: 1px solid rgba(134, 239, 172, 0.2);
+
         padding: 6px 11px;
+
         border-radius: 999px;
+
         font-size: 12px;
         font-weight: 600;
+
         margin-bottom: 12px;
     }
 
@@ -209,18 +278,26 @@ st.markdown(
 
 
     /* ========================================================
-       FEATURE CARDS
+       MAIN WHITE FEATURE CARDS
     ======================================================== */
 
     .feature-card {
         background: #ffffff !important;
-        border: 1px solid #dbe3ee;
+
+        border: 1px solid #dbe3ee !important;
+
         border-radius: 16px;
+
         padding: 18px;
+
         min-height: 125px;
 
         box-shadow:
             0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+
+    .feature-card * {
+        color: #111827 !important;
     }
 
     .feature-icon {
@@ -243,35 +320,40 @@ st.markdown(
 
 
     /* ========================================================
-       STATUS CARDS
+       NORMAL WHITE STATUS CARDS
     ======================================================== */
 
     .status-card {
         background: #ffffff !important;
-        border: 1px solid #dbe3ee;
+
+        border: 1px solid #dbe3ee !important;
+
         border-radius: 14px;
+
         padding: 15px;
+
         margin-bottom: 10px;
 
         box-shadow:
-            0 3px 10px rgba(15, 23, 42, 0.04);
+            0 3px 10px rgba(15, 23, 42, 0.05);
     }
 
-    .status-label {
+    .status-card * {
+        color: #0f172a !important;
+    }
+
+    .status-card .status-label {
         color: #64748b !important;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
 
-    .status-value {
+    .status-card .status-value {
         color: #0f172a !important;
         font-weight: 700;
         font-size: 15px;
         margin-top: 3px;
     }
 
-    .status-detail {
+    .status-card .status-detail {
         color: #475569 !important;
         font-size: 11px;
         margin-top: 5px;
@@ -279,31 +361,36 @@ st.markdown(
 
 
     /* ========================================================
-       BUTTONS
+       MAIN BUTTONS
     ======================================================== */
 
-    .stButton > button {
+    .main .stButton > button {
         background: #ffffff !important;
+
         color: #1e293b !important;
 
         border: 1px solid #dbe3ee !important;
+
         border-radius: 10px;
 
         font-weight: 600;
+
         min-height: 42px;
     }
 
-    .stButton > button p {
+    .main .stButton > button p {
         color: #1e293b !important;
     }
 
-    .stButton > button:hover {
+    .main .stButton > button:hover {
         background: #f8fafc !important;
+
         border-color: #6366f1 !important;
+
         color: #4338ca !important;
     }
 
-    .stButton > button:hover p {
+    .main .stButton > button:hover p {
         color: #4338ca !important;
     }
 
@@ -333,7 +420,9 @@ st.markdown(
 
     [data-testid="stChatMessageContent"] {
         color: #1e293b !important;
+
         font-size: 14px;
+
         line-height: 1.65;
     }
 
@@ -357,17 +446,9 @@ st.markdown(
         color: #94a3b8 !important;
     }
 
-    [data-baseweb="select"] {
-        background-color: #ffffff !important;
-    }
-
-    [data-baseweb="select"] * {
-        color: #111827 !important;
-    }
-
 
     /* ========================================================
-       ALERTS
+       ALERTS / SUCCESS
     ======================================================== */
 
     [data-testid="stAlert"] {
@@ -385,7 +466,9 @@ st.markdown(
 
     .soft-divider {
         height: 1px;
+
         background: #e2e8f0;
+
         margin: 22px 0;
     }
 
@@ -396,15 +479,19 @@ st.markdown(
 
     .zyvra-footer {
         text-align: center;
+
         color: #94a3b8 !important;
+
         font-size: 11px;
+
         margin-top: 35px;
+
         padding-top: 15px;
     }
 
     </style>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 
