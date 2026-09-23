@@ -67,7 +67,6 @@ st.markdown(
 /* ========================================================
    GLOBAL
 ======================================================== */
-
 .stApp {
     background: #f4f7fb;
     color: #111827;
@@ -103,11 +102,9 @@ p {
     color: #334155;
 }
 
-
 /* ========================================================
    SIDEBAR
 ======================================================== */
-
 section[data-testid="stSidebar"] {
     background: #111827;
     border-right: 1px solid #263244;
@@ -138,11 +135,9 @@ section[data-testid="stSidebar"] .stButton button:hover {
     color: white !important;
 }
 
-
 /* ========================================================
    HEADER
 ======================================================== */
-
 .zyvra-header {
     background: linear-gradient(
         135deg,
@@ -150,14 +145,10 @@ section[data-testid="stSidebar"] .stButton button:hover {
         #312e81 50%,
         #4c1d95 100%
     );
-
     border-radius: 22px;
     padding: 28px 32px;
     margin-bottom: 24px;
-
-    box-shadow:
-        0 12px 35px rgba(30, 41, 59, 0.15);
-
+    box-shadow: 0 12px 35px rgba(30, 41, 59, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -187,11 +178,9 @@ section[data-testid="stSidebar"] .stButton button:hover {
     margin-bottom: 12px;
 }
 
-
 /* ========================================================
    WELCOME
 ======================================================== */
-
 .welcome-title {
     font-size: 30px;
     font-weight: 800;
@@ -205,20 +194,16 @@ section[data-testid="stSidebar"] .stButton button:hover {
     margin-bottom: 22px;
 }
 
-
 /* ========================================================
    FEATURE CARDS
 ======================================================== */
-
 .feature-card {
     background: #ffffff !important;
     border: 1px solid #dbe3ee;
     border-radius: 16px;
     padding: 18px;
     min-height: 125px;
-
-    box-shadow:
-        0 4px 14px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
 .feature-icon {
@@ -239,20 +224,16 @@ section[data-testid="stSidebar"] .stButton button:hover {
     margin-top: 4px;
 }
 
-
 /* ========================================================
    STATUS CARDS
 ======================================================== */
-
 .status-card {
     background: #ffffff !important;
     border: 1px solid #dbe3ee;
     border-radius: 14px;
     padding: 15px;
     margin-bottom: 10px;
-
-    box-shadow:
-        0 3px 10px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
 }
 
 .status-label {
@@ -267,6 +248,7 @@ section[data-testid="stSidebar"] .stButton button:hover {
     font-weight: 700;
     font-size: 15px;
     margin-top: 3px;
+    word-break: break-word;
 }
 
 .status-detail {
@@ -275,18 +257,14 @@ section[data-testid="stSidebar"] .stButton button:hover {
     margin-top: 5px;
 }
 
-
 /* ========================================================
    BUTTONS
 ======================================================== */
-
 .stButton > button {
     background: #ffffff !important;
     color: #1e293b !important;
-
     border: 1px solid #dbe3ee !important;
     border-radius: 10px;
-
     font-weight: 600;
     min-height: 42px;
 }
@@ -305,11 +283,9 @@ section[data-testid="stSidebar"] .stButton button:hover {
     color: #4338ca !important;
 }
 
-
 /* ========================================================
    CHAT INPUT
 ======================================================== */
-
 [data-testid="stChatInput"] {
     background: #ffffff !important;
     border-radius: 16px;
@@ -324,11 +300,9 @@ section[data-testid="stSidebar"] .stButton button:hover {
     color: #94a3b8 !important;
 }
 
-
 /* ========================================================
    CHAT MESSAGES
 ======================================================== */
-
 [data-testid="stChatMessageContent"] {
     color: #1e293b !important;
     font-size: 14px;
@@ -339,11 +313,9 @@ section[data-testid="stSidebar"] .stButton button:hover {
     color: #1e293b !important;
 }
 
-
 /* ========================================================
    INPUTS
 ======================================================== */
-
 input,
 textarea {
     color: #111827 !important;
@@ -363,11 +335,9 @@ textarea::placeholder {
     color: #111827 !important;
 }
 
-
 /* ========================================================
    ALERTS
 ======================================================== */
-
 [data-testid="stAlert"] {
     color: #1e293b !important;
 }
@@ -376,22 +346,18 @@ textarea::placeholder {
     color: #1e293b !important;
 }
 
-
 /* ========================================================
    DIVIDER
 ======================================================== */
-
 .soft-divider {
     height: 1px;
     background: #e2e8f0;
     margin: 22px 0;
 }
 
-
 /* ========================================================
    FOOTER
 ======================================================== */
-
 .zyvra-footer {
     text-align: center;
     color: #94a3b8 !important;
@@ -399,8 +365,7 @@ textarea::placeholder {
     margin-top: 35px;
     padding-top: 15px;
 }
-</style>
-""",
+</style>""",
     unsafe_allow_html=True,
 )
 
@@ -414,6 +379,9 @@ if "messages" not in st.session_state:
 
 if "conversation_id" not in st.session_state:
     st.session_state.conversation_id = str(uuid.uuid4())
+
+if "session_title" not in st.session_state:
+    st.session_state.session_title = "New Conversation"
 
 if "pending_escalation" not in st.session_state:
     st.session_state.pending_escalation = None
@@ -430,7 +398,6 @@ if "last_order" not in st.session_state:
 # ============================================================
 
 def find_knowledge_file():
-
     possible_files = [
         DATA_DIR / "knowledge.txt",
         DATA_DIR / "knowledge_base.txt",
@@ -439,18 +406,14 @@ def find_knowledge_file():
     ]
 
     for file in possible_files:
-
         if file.exists():
             return file
 
-    # Also search for any txt/md file in data/
     for file in DATA_DIR.iterdir():
-
         if file.is_file() and file.suffix.lower() in [
             ".txt",
             ".md"
         ]:
-
             if file.name.lower() != ORDERS_FILE.name.lower():
                 return file
 
@@ -466,7 +429,6 @@ KNOWLEDGE_FILE = find_knowledge_file()
 
 @st.cache_resource
 def load_embedding_model():
-
     return SentenceTransformer(
         "sentence-transformers/all-MiniLM-L6-v2"
     )
@@ -480,19 +442,15 @@ embedding_model = load_embedding_model()
 # ============================================================
 
 def read_knowledge_file():
-
     if KNOWLEDGE_FILE is None:
         return ""
 
     try:
-
         return KNOWLEDGE_FILE.read_text(
             encoding="utf-8",
             errors="ignore"
         )
-
     except Exception:
-
         return ""
 
 
@@ -501,7 +459,6 @@ def split_text(
     chunk_size=700,
     overlap=100
 ):
-
     if not text:
         return []
 
@@ -512,13 +469,10 @@ def split_text(
     ).strip()
 
     chunks = []
-
     start = 0
 
     while start < len(text):
-
         end = start + chunk_size
-
         chunk = text[start:end].strip()
 
         if chunk:
@@ -536,12 +490,8 @@ def split_text(
 
 
 def create_knowledge_index():
-
     knowledge = read_knowledge_file()
-
-    chunks = split_text(
-        knowledge
-    )
+    chunks = split_text(knowledge)
 
     if not chunks:
         return None, []
@@ -585,22 +535,8 @@ def create_knowledge_index():
 def load_knowledge_index(
     knowledge_signature
 ):
-
     if KNOWLEDGE_FILE is None:
-
         return None, []
-
-    index_file = (
-        EMBEDDINGS_DIR / "knowledge.index"
-    )
-
-    chunks_file = (
-        EMBEDDINGS_DIR / "chunks.json"
-    )
-
-    # Rebuild from current knowledge file.
-    # This prevents an old FAISS index from being
-    # used after the GitHub knowledge file changes.
 
     return create_knowledge_index()
 
@@ -629,12 +565,10 @@ def search_knowledge(
     query,
     top_k=4
 ):
-
     if (
         knowledge_index is None
         or not knowledge_chunks
     ):
-
         return []
 
     query_embedding = embedding_model.encode(
@@ -664,7 +598,6 @@ def search_knowledge(
         scores[0],
         indices[0]
     ):
-
         if index < 0:
             continue
 
@@ -684,18 +617,14 @@ def search_knowledge(
 
 @st.cache_data
 def load_orders():
-
     if not ORDERS_FILE.exists():
         return pd.DataFrame()
 
     try:
-
         return pd.read_excel(
             ORDERS_FILE
         )
-
     except Exception:
-
         return pd.DataFrame()
 
 
@@ -705,7 +634,6 @@ orders_df = load_orders()
 def normalize_column_name(
     name
 ):
-
     return (
         str(name)
         .strip()
@@ -718,7 +646,6 @@ def normalize_column_name(
 def find_order(
     order_id
 ):
-
     if orders_df.empty:
         return None
 
@@ -741,9 +668,7 @@ def find_order(
     order_column = None
 
     for column in possible_columns:
-
         if column in df.columns:
-
             order_column = column
             break
 
@@ -768,15 +693,11 @@ def find_order(
         return None
 
     result = matches.iloc[0].to_dict()
-
     cleaned = {}
 
     for key, value in result.items():
-
         if pd.isna(value):
-
             cleaned[str(key)] = ""
-
         elif isinstance(
             value,
             (
@@ -784,15 +705,12 @@ def find_order(
                 datetime
             )
         ):
-
             cleaned[str(key)] = (
                 value.strftime(
                     "%Y-%m-%d %H:%M:%S"
                 )
             )
-
         else:
-
             cleaned[str(key)] = str(value)
 
     return cleaned
@@ -811,14 +729,12 @@ def knowledge_search_tool(
     Use this for company policies, FAQs, products,
     shipping, refunds and support information.
     """
-
     results = search_knowledge(
         query,
         top_k=4
     )
 
     if not results:
-
         return (
             "No relevant information was found "
             "in the Zyvra knowledge base."
@@ -830,7 +746,6 @@ def knowledge_search_tool(
         results,
         1
     ):
-
         output.append(
             f"Source {i}:\n"
             f"{result['text']}"
@@ -848,13 +763,11 @@ def order_lookup_tool(
     """
     Look up a customer's order using the order ID.
     """
-
     result = find_order(
         order_id
     )
 
     if not result:
-
         return (
             f"No order was found for "
             f"order ID {order_id}."
@@ -875,7 +788,6 @@ def create_escalation_tool(
     Request human support escalation.
     The application layer creates the actual support case.
     """
-
     return (
         "Human support escalation has been requested. "
         "The application will create and track the support case."
@@ -888,7 +800,6 @@ def create_escalation_tool(
 
 @st.cache_resource
 def create_support_agent():
-
     llm = LLM(
         model="gemini/gemini-3.5-flash-lite",
         api_key=GEMINI_API_KEY,
@@ -897,14 +808,12 @@ def create_support_agent():
 
     agent = Agent(
         role="Zyvra Customer Support Specialist",
-
         goal=(
             "Resolve customer support requests accurately "
             "using Zyvra's knowledge base and order database. "
             "Escalate issues to human support when human "
             "intervention is required."
         ),
-
         backstory=(
             "You are Zyvra's AI customer support specialist. "
             "You provide accurate, concise and professional "
@@ -912,17 +821,13 @@ def create_support_agent():
             "or company policies. When information is insufficient "
             "or a human must intervene, request human escalation."
         ),
-
         tools=[
             knowledge_search_tool,
             order_lookup_tool,
             create_escalation_tool
         ],
-
         llm=llm,
-
         verbose=False,
-
         allow_delegation=False
     )
 
@@ -940,21 +845,17 @@ def generate_support_response(
     user_message,
     conversation_history
 ):
-
     history_text = ""
 
     for message in conversation_history[-8:]:
-
         role = message.get(
             "role",
             ""
         )
-
         content = message.get(
             "content",
             ""
         )
-
         history_text += (
             f"{role.upper()}: "
             f"{content}\n"
@@ -1003,12 +904,10 @@ Return only the final response to the customer.
 
     task = Task(
         description=task_description,
-
         expected_output=(
             "A concise, accurate and professional "
             "customer support response."
         ),
-
         agent=support_agent
     )
 
@@ -1016,13 +915,10 @@ Return only the final response to the customer.
         agents=[
             support_agent
         ],
-
         tasks=[
             task
         ],
-
         process=Process.sequential,
-
         verbose=False
     )
 
@@ -1038,33 +934,19 @@ Return only the final response to the customer.
 def response_requires_escalation(
     response
 ):
-
     escalation_phrases = [
-
         "escalated to our human support",
-
         "escalated to human support",
-
         "escalated your request",
-
         "human support team",
-
         "human support",
-
         "support team will review",
-
         "representative will review",
-
         "representative will reach out",
-
         "human representative",
-
         "human agent",
-
         "human intervention",
-
         "human support representative",
-
         "support representative",
     ]
 
@@ -1086,20 +968,15 @@ def response_requires_escalation(
 def extract_order_id(
     text
 ):
-
     if not text:
         return None
 
     patterns = [
-
         r"\bORD[-\w]+\b",
-
         r"\bORDER[-\s]?[A-Z0-9-]+\b",
-
     ]
 
     for pattern in patterns:
-
         match = re.search(
             pattern,
             text,
@@ -1107,12 +984,10 @@ def extract_order_id(
         )
 
         if match:
-
             value = (
                 match.group(0)
                 .strip()
             )
-
             return value
 
     return None
@@ -1127,7 +1002,6 @@ def create_escalation_case(
     order_id=None,
     customer_message=None
 ):
-
     case_id = (
         "ZYV-"
         + datetime.now().strftime(
@@ -1140,32 +1014,23 @@ def create_escalation_case(
     )
 
     case = {
-
         "case_id": case_id,
-
         "conversation_id":
             st.session_state.conversation_id,
-
         "order_id":
             order_id or "N/A",
-
         "customer_message":
             customer_message or "",
-
         "reason":
             reason,
-
         "created_at":
             datetime.now().strftime(
                 "%Y-%m-%d %H:%M:%S"
             ),
-
         "status":
             "Open",
-
         "priority":
             "Medium",
-
         "assigned_to":
             "Unassigned",
     }
@@ -1174,7 +1039,6 @@ def create_escalation_case(
         "escalated_cases"
         not in st.session_state
     ):
-
         st.session_state.escalated_cases = []
 
     st.session_state.escalated_cases.append(
@@ -1192,16 +1056,9 @@ def create_escalation_case(
 
 st.markdown(
     """<div class="zyvra-header">
-<div class="zyvra-status">
-    ● Online · AI Support
-</div>
-<div class="zyvra-header-title">
-    Zyvra
-</div>
-<div class="zyvra-header-subtitle">
-    Fast answers. Clear support.
-    Human escalation when needed.
-</div>
+<div class="zyvra-status">● Online · AI Support</div>
+<div class="zyvra-header-title">Zyvra</div>
+<div class="zyvra-header-subtitle">Fast answers. Clear support. Human escalation when needed.</div>
 </div>""",
     unsafe_allow_html=True
 )
@@ -1212,7 +1069,6 @@ st.markdown(
 # ============================================================
 
 with st.sidebar:
-
     st.markdown(
         "## Zyvra Support"
     )
@@ -1233,12 +1089,9 @@ with st.sidebar:
 
     st.markdown(
         f"""<div class="status-card">
-<div class="status-label">
-    Conversation
-</div>
-<div class="status-value">
-    {st.session_state.conversation_id[:8]}
-</div>
+<div class="status-label">Active Conversation</div>
+<div class="status-value">{st.session_state.session_title}</div>
+<div class="status-detail">ID: {st.session_state.conversation_id[:8]}</div>
 </div>""",
         unsafe_allow_html=True
     )
@@ -1247,17 +1100,13 @@ with st.sidebar:
         "＋ New Conversation",
         use_container_width=True
     ):
-
         st.session_state.messages = []
-
         st.session_state.conversation_id = (
             str(uuid.uuid4())
         )
-
+        st.session_state.session_title = "New Conversation"
         st.session_state.pending_escalation = None
-
         st.session_state.last_order = None
-
         st.rerun()
 
     st.divider()
@@ -1276,7 +1125,6 @@ with st.sidebar:
     )
 
     if cases:
-
         st.caption(
             f"{len(cases)} active case(s)"
         )
@@ -1284,27 +1132,16 @@ with st.sidebar:
         for case in reversed(
             cases[-5:]
         ):
-
             st.markdown(
                 f"""<div class="status-card">
-<div class="status-label">
-    {case["status"]} · {case["priority"]}
-</div>
-<div class="status-value">
-    {case["case_id"]}
-</div>
-<div class="status-detail">
-    Order: {case["order_id"]}
-</div>
-<div class="status-detail">
-    {case["created_at"]}
-</div>
+<div class="status-label">{case["status"]} · {case["priority"]}</div>
+<div class="status-value">{case["case_id"]}</div>
+<div class="status-detail">Order: {case["order_id"]}</div>
+<div class="status-detail">{case["created_at"]}</div>
 </div>""",
                 unsafe_allow_html=True
             )
-
     else:
-
         st.caption(
             "No active escalations."
         )
@@ -1323,41 +1160,27 @@ with st.sidebar:
         knowledge_index is not None
         and knowledge_chunks
     ):
-
         kb_status = (
             f"{len(knowledge_chunks)} chunks"
         )
-
     else:
-
         kb_status = "Not loaded"
 
     if not orders_df.empty:
-
         order_status = (
             f"{len(orders_df)} records"
         )
-
     else:
-
         order_status = "No data"
 
     st.markdown(
         f"""<div class="status-card">
-<div class="status-label">
-    Knowledge Base
-</div>
-<div class="status-value">
-    {kb_status}
-</div>
+<div class="status-label">Knowledge Base</div>
+<div class="status-value">{kb_status}</div>
 </div>
 <div class="status-card">
-<div class="status-label">
-    Orders Database
-</div>
-<div class="status-value">
-    {order_status}
-</div>
+<div class="status-label">Orders Database</div>
+<div class="status-value">{order_status}</div>
 </div>""",
         unsafe_allow_html=True
     )
@@ -1368,7 +1191,6 @@ with st.sidebar:
 # ============================================================
 
 if not st.session_state.messages:
-
     st.markdown(
         '<div class="welcome-title">How can we help?</div>',
         unsafe_allow_html=True
@@ -1382,52 +1204,31 @@ if not st.session_state.messages:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-
         st.markdown(
             """<div class="feature-card">
-<div class="feature-icon">
-    📦
-</div>
-<div class="feature-title">
-    Order Support
-</div>
-<div class="feature-text">
-    Check order information and get help with order-related questions.
-</div>
+<div class="feature-icon">📦</div>
+<div class="feature-title">Order Support</div>
+<div class="feature-text">Check order information and get help with order-related questions.</div>
 </div>""",
             unsafe_allow_html=True
         )
 
     with col2:
-
         st.markdown(
             """<div class="feature-card">
-<div class="feature-icon">
-    🔎
-</div>
-<div class="feature-title">
-    Knowledge Search
-</div>
-<div class="feature-text">
-    Get accurate answers from Zyvra's internal support knowledge base.
-</div>
+<div class="feature-icon">🔎</div>
+<div class="feature-title">Knowledge Search</div>
+<div class="feature-text">Get accurate answers from Zyvra's internal support knowledge base.</div>
 </div>""",
             unsafe_allow_html=True
         )
 
     with col3:
-
         st.markdown(
             """<div class="feature-card">
-<div class="feature-icon">
-    👤
-</div>
-<div class="feature-title">
-    Human Escalation
-</div>
-<div class="feature-text">
-    Complex cases can be forwarded to human support when required.
-</div>
+<div class="feature-icon">👤</div>
+<div class="feature-title">Human Escalation</div>
+<div class="feature-text">Complex cases can be forwarded to human support when required.</div>
 </div>""",
             unsafe_allow_html=True
         )
@@ -1453,13 +1254,16 @@ if not st.session_state.messages:
         suggestion_cols,
         suggestions
     ):
-
         with col:
-
             if st.button(
                 suggestion,
                 use_container_width=True
             ):
+                if st.session_state.session_title == "New Conversation":
+                    clean_text = suggestion.strip()
+                    st.session_state.session_title = (
+                        clean_text[:28] + "…" if len(clean_text) > 28 else clean_text
+                    )
 
                 st.session_state.messages.append(
                     {
@@ -1467,7 +1271,6 @@ if not st.session_state.messages:
                         "content": suggestion
                     }
                 )
-
                 st.rerun()
 
 
@@ -1476,7 +1279,6 @@ if not st.session_state.messages:
 # ============================================================
 
 for message in st.session_state.messages:
-
     role = message["role"]
 
     with st.chat_message(
@@ -1487,7 +1289,6 @@ for message in st.session_state.messages:
             else "👤"
         )
     ):
-
         st.markdown(
             message["content"]
         )
@@ -1503,6 +1304,14 @@ user_prompt = st.chat_input(
 
 
 if user_prompt:
+    # --------------------------------------------------------
+    # UPDATE DYNAMIC SESSION TITLE
+    # --------------------------------------------------------
+    if st.session_state.session_title == "New Conversation":
+        clean_text = user_prompt.strip()
+        st.session_state.session_title = (
+            clean_text[:28] + "…" if len(clean_text) > 28 else clean_text
+        )
 
     # --------------------------------------------------------
     # SAVE USER MESSAGE
@@ -1519,7 +1328,6 @@ if user_prompt:
         "user",
         avatar="👤"
     ):
-
         st.markdown(
             user_prompt
         )
@@ -1532,26 +1340,20 @@ if user_prompt:
         "assistant",
         avatar="🤖"
     ):
-
         with st.spinner(
             "Zyvra is checking..."
         ):
-
             try:
-
                 response = generate_support_response(
                     user_prompt,
                     st.session_state.messages
                 )
-
             except Exception as error:
-
                 response = (
                     "I'm sorry, but I couldn't process "
                     "your request right now. Please try "
                     "again in a moment."
                 )
-
                 st.session_state.last_error = str(
                     error
                 )
@@ -1567,15 +1369,11 @@ if user_prompt:
     if response_requires_escalation(
         response
     ):
-
-        # Search current message first
         order_id = extract_order_id(
             user_prompt
         )
 
-        # If not found, search the conversation
         if not order_id:
-
             conversation_text = " ".join(
                 message["content"]
                 for message
@@ -1616,7 +1414,6 @@ if user_prompt:
 # ============================================================
 
 if st.session_state.pending_escalation:
-
     case = (
         st.session_state.pending_escalation
     )
@@ -1635,8 +1432,6 @@ if st.session_state.pending_escalation:
 # ============================================================
 
 st.markdown(
-    """<div class="zyvra-footer">
-    Zyvra AI Support · Powered by RAG + Agentic AI
-</div>""",
+    """<div class="zyvra-footer">Zyvra AI Support · Powered by RAG + Agentic AI</div>""",
     unsafe_allow_html=True
 )
